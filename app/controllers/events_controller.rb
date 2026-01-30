@@ -1,0 +1,45 @@
+# app/controllers/events_controller.rb
+class EventsController < ApplicationController
+  def index
+    @events = Event.active.upcoming
+
+    respond_to do |format|
+      format.html { render layout: false } # Désactive le layout Rails
+      format.json { render json: @events }
+    end
+  end
+
+  def show
+    @event = Event.friendly.find(params[:id])
+    render layout: false
+  end
+
+  def new
+    @event = Event.new
+    render layout: false
+  end
+
+  def create
+    @event = Event.new(event_params)
+    @event.is_active = false
+
+    if @event.save
+      redirect_to events_path, notice: "Merci ! Ton événement sera publié après validation."
+    else
+      render :new, layout: false
+    end
+  end
+
+  private
+
+  def event_params
+    params.require(:event).permit(
+      :title, :description, :event_type, :level,
+      :venue_name, :address, :city, :postal_code,
+      :starts_at, :ends_at, :recurrence,
+      :price, :is_free, :has_lessons, :lessons_time,
+      :organizer_name, :organizer_email, :phone, :website, :facebook_url,
+      dance_styles: []
+    )
+  end
+end

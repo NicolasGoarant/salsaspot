@@ -1,0 +1,639 @@
+<%# app/views/events/index.html.erb - VERSION FINALE RESPONSIVE %>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>SalsaSpot — Trouve ta soirée latino ce soir 🔥</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #ff2d55;
+      --primary-glow: rgba(255, 45, 85, 0.4);
+      --secondary: #ff9500;
+      --bg-dark: #0a0a0a;
+      --bg-card: #1c1c1e;
+      --bg-elevated: #2c2c2e;
+      --text-primary: #ffffff;
+      --text-secondary: #8e8e93;
+      --border: rgba(255, 255, 255, 0.1);
+      --glass: rgba(28, 28, 30, 0.7);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body { height: 100%; overflow: hidden; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* NAVBAR */
+    .navbar {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.75rem;
+      letter-spacing: 0.05em;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .tagline {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    .navbar-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      text-decoration: none;
+      border-radius: 2rem;
+      font-weight: 600;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    .navbar-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--primary-glow);
+    }
+
+    /* FILTRES */
+    .filters {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      flex-shrink: 0;
+      overflow-x: auto;
+    }
+
+    .filters-container {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      min-width: max-content;
+    }
+
+    .filter-chip {
+      padding: 0.625rem 1.25rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 2rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+
+    .filter-chip:hover {
+      background: var(--bg-elevated);
+    }
+
+    .filter-chip.active {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-color: transparent;
+      color: white;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    /* MAIN LAYOUT */
+    .main-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* CARTE */
+    .map-section {
+      position: relative;
+      background: var(--bg-card);
+      border-right: 1px solid var(--border);
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    .map-controls {
+      position: absolute;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 1000;
+    }
+
+    .map-btn {
+      width: 56px;
+      height: 56px;
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .map-btn:hover {
+      background: var(--bg-elevated);
+      transform: scale(1.05);
+    }
+
+    /* LISTE */
+    .events-section {
+      background: var(--bg-dark);
+      overflow-y: auto;
+      padding: 2rem;
+    }
+
+    .events-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .events-header h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 0.05em;
+    }
+
+    .events-count {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: var(--bg-card);
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      border: 1px solid var(--border);
+    }
+
+    .events-grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    /* CARTE ÉVÉNEMENT */
+    .event-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.3s;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .event-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transform: scaleX(0);
+      transition: transform 0.3s;
+    }
+
+    .event-card:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .event-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .event-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 0.75rem;
+    }
+
+    .event-styles {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .style-tag {
+      padding: 0.25rem 0.75rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: white;
+      text-transform: uppercase;
+    }
+
+    .badge {
+      padding: 0.25rem 0.625rem;
+      border-radius: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-free {
+      background: rgba(52, 199, 89, 0.15);
+      color: #34c759;
+      border: 1px solid rgba(52, 199, 89, 0.3);
+    }
+
+    .badge-lessons {
+      background: rgba(255, 149, 0, 0.15);
+      color: var(--secondary);
+      border: 1px solid rgba(255, 149, 0, 0.3);
+    }
+
+    .event-meta {
+      display: grid;
+      gap: 0.5rem;
+      margin: 1rem 0;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .event-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .event-description {
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 1rem;
+      font-size: 0.9375rem;
+    }
+
+    .event-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .event-price {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .event-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      text-decoration: none;
+      border-radius: 2rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+      transition: all 0.3s;
+    }
+
+    .event-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--primary-glow);
+    }
+
+    /* SCROLLBAR */
+    .events-section::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .events-section::-webkit-scrollbar-track {
+      background: var(--bg-dark);
+    }
+
+    .events-section::-webkit-scrollbar-thumb {
+      background: var(--bg-elevated);
+      border-radius: 4px;
+    }
+
+    /* LEAFLET POPUP */
+    .leaflet-popup-content-wrapper {
+      background: var(--bg-card) !important;
+      color: var(--text-primary) !important;
+      border-radius: 1rem !important;
+      padding: 0 !important;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
+      border: 1px solid var(--border) !important;
+    }
+
+    .leaflet-popup-content {
+      margin: 0 !important;
+      padding: 1rem !important;
+      font-family: 'DM Sans', sans-serif !important;
+    }
+
+    .leaflet-popup-tip {
+      background: var(--bg-card) !important;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .main-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: 50vh 1fr;
+      }
+
+      .map-section {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .navbar {
+        padding: 1rem;
+      }
+
+      .tagline {
+        display: none;
+      }
+
+      .navbar-cta {
+        padding: 0.625rem 1.25rem;
+        font-size: 0.875rem;
+      }
+
+      .filters {
+        padding: 0.75rem 1rem;
+      }
+
+      .filters-container {
+        justify-content: flex-start;
+      }
+
+      .events-section {
+        padding: 1rem;
+      }
+
+      .events-header h2 {
+        font-size: 1.5rem;
+      }
+
+      .event-card {
+        padding: 1.25rem;
+      }
+
+      .event-title {
+        font-size: 1.125rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <%= link_to events_path, class: "navbar-brand" do %>
+      <div class="logo">SalsaSpot</div>
+      <span class="tagline">🎵 Trouve ta soirée latino</span>
+    <% end %>
+
+    <%= link_to new_event_path, class: "navbar-cta" do %>
+      ➕ Ajouter une soirée
+    <% end %>
+  </nav>
+
+  <!-- FILTRES -->
+  <div class="filters">
+    <div class="filters-container">
+      <button class="filter-chip active" data-style="">🌍 Toutes</button>
+      <button class="filter-chip" data-style="salsa">💃 Salsa</button>
+      <button class="filter-chip" data-style="bachata">🕺 Bachata</button>
+      <button class="filter-chip" data-style="kizomba">❤️ Kizomba</button>
+      <button class="filter-chip" data-free="true">💸 Gratuit</button>
+      <button class="filter-chip" data-lessons="true">📚 Cours</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-container">
+    <!-- CARTE -->
+    <div class="map-section">
+      <div id="map"></div>
+      <div class="map-controls">
+        <button class="map-btn" id="locate-btn">📍</button>
+      </div>
+    </div>
+
+    <!-- LISTE -->
+    <div class="events-section">
+      <div class="events-header">
+        <h2>Soirées à venir</h2>
+        <span class="events-count"><%= @events.size %> événements</span>
+      </div>
+
+      <div class="events-grid">
+        <% if @events.any? %>
+          <% @events.each do |event| %>
+            <div class="event-card">
+              <h3 class="event-title"><%= event.title %></h3>
+
+              <div class="event-styles">
+                <% event.dance_styles.each do |style| %>
+                  <span class="style-tag"><%= style.capitalize %></span>
+                <% end %>
+                <% if event.has_lessons %>
+                  <span class="badge badge-lessons">📚 Cours <%= event.lessons_time %></span>
+                <% end %>
+                <% if event.is_free %>
+                  <span class="badge badge-free">💸 Gratuit</span>
+                <% end %>
+              </div>
+
+              <div class="event-meta">
+                <span class="event-meta-item">
+                  📅 <%= l(event.starts_at, format: :short) %>
+                </span>
+                <span class="event-meta-item">
+                  📍 <%= event.venue_name %>, <%= event.city %>
+                </span>
+                <span class="event-meta-item">
+                  <%= event.level == 'tous' ? '⚪️' : event.level == 'debutant' ? '🟢' : event.level == 'intermediaire' ? '🟡' : '🔴' %>
+                  <%= event.level.capitalize %>
+                </span>
+              </div>
+
+              <% if event.description.present? %>
+                <p class="event-description"><%= truncate(event.description, length: 100) %></p>
+              <% end %>
+
+              <div class="event-footer">
+                <div class="event-price"><%= event.price_display %></div>
+                <%= link_to event_path(event), class: "event-cta" do %>
+                  Voir détails →
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <div style="text-align: center; padding: 4rem 2rem;">
+            <div style="font-size: 4rem; margin-bottom: 1.5rem;">🎵</div>
+            <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Aucune soirée</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Sois le premier à en ajouter une !</p>
+            <%= link_to new_event_path, class: "event-cta" do %>
+              ➕ Ajouter une soirée
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
+    const map = L.map('map', { zoomControl: false }).setView([46.603354, 1.888334], 6);
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '© OpenStreetMap, © CartoDB'
+    }).addTo(map);
+
+    const markersLayer = L.layerGroup().addTo(map);
+    const userLayer = L.layerGroup().addTo(map);
+
+    let allEvents = [];
+    fetch('/events.json')
+      .then(r => r.json())
+      .then(events => {
+        allEvents = events;
+        renderMarkers(events);
+      });
+
+    function renderMarkers(events) {
+      markersLayer.clearLayers();
+
+      events.forEach(event => {
+        if (!event.latitude || !event.longitude) return;
+
+        const color = event.is_free ? '#34c759' : '#ff2d55';
+        const styles = event.dance_styles.join('/');
+
+        const icon = L.divIcon({
+          html: `<div style="background: ${color}; color: white; padding: 8px 14px; border-radius: 20px; font-weight: 700; font-size: 13px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); border: 2px solid rgba(255,255,255,0.2); font-family: 'DM Sans', sans-serif;">${styles}</div>`,
+          className: ''
+        });
+
+        L.marker([event.latitude, event.longitude], { icon })
+          .bindPopup(`
+            <div style="min-width: 220px;">
+              <strong style="font-size: 1.1rem; display: block; margin-bottom: 8px;">${event.title}</strong>
+              <div style="color: #8e8e93; margin-bottom: 4px;">📍 ${event.venue_name || event.city}</div>
+              <div style="color: #8e8e93; margin-bottom: 12px;">${event.price_display}</div>
+              <a href="/events/${event.slug}" style="display: inline-block; background: linear-gradient(135deg, #ff2d55, #ff9500); color: white; padding: 8px 16px; border-radius: 20px; text-decoration: none; font-weight: 600;">Voir détails →</a>
+            </div>
+          `)
+          .addTo(markersLayer);
+      });
+    }
+
+    // Géolocalisation
+    let watchId = null;
+    document.getElementById('locate-btn').addEventListener('click', () => {
+      if (watchId) {
+        navigator.geolocation.clearWatch(watchId);
+        watchId = null;
+        userLayer.clearLayers();
+        document.getElementById('locate-btn').textContent = '📍';
+        return;
+      }
+
+      if ('geolocation' in navigator) {
+        document.getElementById('locate-btn').textContent = '⏳';
+
+        navigator.geolocation.getCurrentPosition(pos => {
+          const { latitude, longitude } = pos.coords;
+
+          userLayer.clearLayers();
+          L.circleMarker([latitude, longitude], {
+            radius: 8,
+            color: '#ffffff',
+            fillColor: '#007aff',
+            fillOpacity: 1,
+            weight: 3
+          }).addTo(userLayer);
+
+          map.flyTo([latitude, longitude], 13);
+          document.getElementById('locate-btn').textContent = '🛑';
+        }, () => {
+          alert('Impossible de te localiser');
+          document.getElementById('locate-btn').textContent = '📍';
+        });
+      }
+    });
+
+    // Filtres
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+
+        const style = chip.dataset.style;
+        const free = chip.dataset.free;
+        const lessons = chip.dataset.lessons;
+
+        let filtered = allEvents;
+
+        if (style) filtered = filtered.filter(e => e.dance_styles.includes(style));
+        if (free) filtered = filtered.filter(e => e.is_free);
+        if (lessons) filtered = filtered.filter(e => e.has_lessons);
+
+        renderMarkers(filtered);
+      });
+    });
+  </script>
+</body>
+</html>

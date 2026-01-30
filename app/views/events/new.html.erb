@@ -1,0 +1,550 @@
+<%# app/views/events/new.html.erb %>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Ajouter une soirée — SalsaSpot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%= csrf_meta_tags %>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #ff2d55;
+      --secondary: #ff9500;
+      --bg-dark: #0a0a0a;
+      --bg-card: #1c1c1e;
+      --bg-elevated: #2c2c2e;
+      --text-primary: #ffffff;
+      --text-secondary: #8e8e93;
+      --border: rgba(255, 255, 255, 0.1);
+      --success: #34c759;
+      --error: #ff3b30;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .header {
+      background: var(--bg-card);
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .back-btn {
+      font-size: 1.5rem;
+      text-decoration: none;
+      color: var(--text-secondary);
+      transition: color 0.2s;
+    }
+
+    .back-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .header-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.75rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* Container */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    .form-intro {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .form-intro h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      letter-spacing: 0.05em;
+    }
+
+    .form-intro .gradient-text {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .form-intro p {
+      color: var(--text-secondary);
+      font-size: 1.125rem;
+    }
+
+    /* Form */
+    .form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 1.5rem;
+      padding: 2.5rem;
+    }
+
+    .form-section {
+      margin-bottom: 2.5rem;
+    }
+
+    .form-section-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .form-label .required {
+      color: var(--error);
+    }
+
+    .form-hint {
+      display: block;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .form-input,
+    .form-textarea,
+    .form-select {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus,
+    .form-select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(255, 45, 85, 0.1);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    /* Checkboxes */
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .checkbox-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1.25rem;
+      background: var(--bg-elevated);
+      border: 2px solid var(--border);
+      border-radius: 2rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .checkbox-label:hover {
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .checkbox-input {
+      display: none;
+    }
+
+    .checkbox-input:checked + .checkbox-label {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-color: transparent;
+      color: white;
+    }
+
+    /* Grid layout */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 640px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Toggle */
+    .toggle-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .toggle {
+      position: relative;
+      width: 56px;
+      height: 32px;
+    }
+
+    .toggle-input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--bg-elevated);
+      border: 2px solid var(--border);
+      border-radius: 2rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      top: 4px;
+      background: var(--text-secondary);
+      border-radius: 50%;
+      transition: all 0.3s;
+    }
+
+    .toggle-input:checked + .toggle-slider {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-color: transparent;
+    }
+
+    .toggle-input:checked + .toggle-slider::before {
+      transform: translateX(24px);
+      background: white;
+    }
+
+    /* Submit button */
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn {
+      padding: 1rem 2rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      flex: 1;
+      text-align: center;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      box-shadow: 0 4px 12px rgba(255, 45, 85, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255, 45, 85, 0.6);
+    }
+
+    .btn-secondary {
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-card);
+    }
+
+    /* Error messages */
+    .field_with_errors {
+      display: contents;
+    }
+
+    .field_with_errors .form-input,
+    .field_with_errors .form-textarea,
+    .field_with_errors .form-select {
+      border-color: var(--error);
+    }
+
+    .error-message {
+      color: var(--error);
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <%= link_to "←", events_path, class: "back-btn" %>
+      <h2 class="header-title">Ajouter une soirée</h2>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="form-intro">
+      <h1><span class="gradient-text">Partage</span> ta soirée</h1>
+      <p>Aide la communauté à découvrir les meilleures soirées salsa/bachata</p>
+    </div>
+
+    <%= form_with model: @event, class: "form-card" do |f| %>
+      <!-- Informations de base -->
+      <div class="form-section">
+        <h3 class="form-section-title">📝 Informations générales</h3>
+
+        <div class="form-group">
+          <%= f.label :title, class: "form-label" do %>
+            Nom de la soirée <span class="required">*</span>
+          <% end %>
+          <%= f.text_field :title, class: "form-input", placeholder: "Ex: Soirée Salsa au Café Latino", required: true %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :description, class: "form-label" do %>
+            Description
+          <% end %>
+          <%= f.text_area :description, class: "form-textarea", placeholder: "Décris l'ambiance, le niveau, ce qui rend cette soirée spéciale..." %>
+          <span class="form-hint">Optionnel mais recommandé pour attirer plus de danseurs !</span>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :event_type, "Type d'événement", class: "form-label" %>
+          <%= f.select :event_type,
+                      [['Soirée dansante', 'soiree'], ['Cours', 'cours'], ['Festival/Congrès', 'festival']],
+                      {},
+                      class: "form-select" %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :dance_styles, "Styles de danse", class: "form-label" %>
+          <div class="checkbox-group">
+            <% ['salsa', 'bachata', 'kizomba'].each do |style| %>
+              <%= f.check_box :dance_styles, { multiple: true, checked: false, class: "checkbox-input", id: "style_#{style}" }, style, nil %>
+              <%= f.label "dance_styles_#{style}", style.capitalize, class: "checkbox-label", for: "style_#{style}" %>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :level, "Niveau", class: "form-label" %>
+          <%= f.select :level,
+                      [['Tous niveaux', 'tous'], ['Débutant', 'debutant'], ['Intermédiaire', 'intermediaire'], ['Avancé', 'avance']],
+                      {},
+                      class: "form-select" %>
+        </div>
+      </div>
+
+      <!-- Lieu -->
+      <div class="form-section">
+        <h3 class="form-section-title">📍 Lieu</h3>
+
+        <div class="form-group">
+          <%= f.label :venue_name, "Nom du lieu", class: "form-label" %>
+          <%= f.text_field :venue_name, class: "form-input", placeholder: "Ex: La Felicitá" %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :address, "Adresse", class: "form-label" do %>
+            Adresse <span class="required">*</span>
+          <% end %>
+          <%= f.text_field :address, class: "form-input", placeholder: "5 Rue de la Danse", required: true %>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <%= f.label :city, class: "form-label" do %>
+              Ville <span class="required">*</span>
+            <% end %>
+            <%= f.text_field :city, class: "form-input", placeholder: "Paris", required: true %>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :postal_code, "Code postal", class: "form-label" %>
+            <%= f.text_field :postal_code, class: "form-input", placeholder: "75001" %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Date et horaires -->
+      <div class="form-section">
+        <h3 class="form-section-title">📅 Date et horaires</h3>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <%= f.label :starts_at, "Début", class: "form-label" do %>
+              Date et heure de début <span class="required">*</span>
+            <% end %>
+            <%= f.datetime_local_field :starts_at, class: "form-input", required: true %>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :ends_at, "Fin", class: "form-label" %>
+            <%= f.datetime_local_field :ends_at, class: "form-input" %>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :recurrence, "Récurrence", class: "form-label" %>
+          <%= f.select :recurrence,
+                      [['Événement ponctuel', 'ponctuel'], ['Tous les lundis', 'hebdomadaire'], ['Tous les mois', 'mensuel']],
+                      {},
+                      class: "form-select" %>
+        </div>
+      </div>
+
+      <!-- Prix et cours -->
+      <div class="form-section">
+        <h3 class="form-section-title">💰 Prix et cours</h3>
+
+        <div class="form-group">
+          <div class="toggle-group">
+            <%= f.check_box :is_free, class: "toggle-input", id: "is_free_toggle" %>
+            <%= f.label :is_free, class: "toggle", for: "is_free_toggle" do %>
+              <span class="toggle-slider"></span>
+            <% end %>
+            <span>Entrée gratuite</span>
+          </div>
+        </div>
+
+        <div class="form-group" id="price-field">
+          <%= f.label :price, "Prix (€)", class: "form-label" %>
+          <%= f.number_field :price, class: "form-input", step: 0.5, min: 0, placeholder: "10" %>
+        </div>
+
+        <div class="form-group">
+          <div class="toggle-group">
+            <%= f.check_box :has_lessons, class: "toggle-input", id: "has_lessons_toggle" %>
+            <%= f.label :has_lessons, class: "toggle", for: "has_lessons_toggle" do %>
+              <span class="toggle-slider"></span>
+            <% end %>
+            <span>Cours inclus</span>
+          </div>
+        </div>
+
+        <div class="form-group" id="lessons-time-field" style="display: none;">
+          <%= f.label :lessons_time, "Horaire des cours", class: "form-label" %>
+          <%= f.text_field :lessons_time, class: "form-input", placeholder: "19h-20h" %>
+        </div>
+      </div>
+
+      <!-- Contact -->
+      <div class="form-section">
+        <h3 class="form-section-title">📞 Contact</h3>
+
+        <div class="form-group">
+          <%= f.label :organizer_name, "Organisateur", class: "form-label" %>
+          <%= f.text_field :organizer_name, class: "form-input", placeholder: "Ton nom ou celui de ton école" %>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <%= f.label :phone, "Téléphone", class: "form-label" %>
+            <%= f.telephone_field :phone, class: "form-input", placeholder: "06 12 34 56 78" %>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :organizer_email, "Email", class: "form-label" %>
+            <%= f.email_field :organizer_email, class: "form-input", placeholder: "contact@exemple.fr" %>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :website, "Site web", class: "form-label" %>
+          <%= f.url_field :website, class: "form-input", placeholder: "https://..." %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :facebook_url, "Page Facebook", class: "form-label" %>
+          <%= f.url_field :facebook_url, class: "form-input", placeholder: "https://facebook.com/..." %>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <%= link_to "Annuler", events_path, class: "btn btn-secondary" %>
+        <%= f.submit "Publier la soirée 🎉", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+
+  <script>
+    // Toggle price field based on is_free
+    const freeCheckbox = document.getElementById('is_free_toggle');
+    const priceField = document.getElementById('price-field');
+
+    freeCheckbox.addEventListener('change', () => {
+      priceField.style.display = freeCheckbox.checked ? 'none' : 'block';
+    });
+
+    // Toggle lessons time field
+    const lessonsCheckbox = document.getElementById('has_lessons_toggle');
+    const lessonsTimeField = document.getElementById('lessons-time-field');
+
+    lessonsCheckbox.addEventListener('change', () => {
+      lessonsTimeField.style.display = lessonsCheckbox.checked ? 'block' : 'none';
+    });
+  </script>
+</body>
+</html>
