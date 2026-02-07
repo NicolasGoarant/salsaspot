@@ -767,6 +767,9 @@
         renderMarkers(events);
       });
 
+    // Variable globale pour le filtre actif
+    let activeFilter = null;
+
     function renderMarkers(events) {
       markersLayer.clearLayers();
 
@@ -774,9 +777,20 @@
         if (!event.latitude || !event.longitude) return;
 
         const color = event.is_free ? '#4CAF50' : '#ff6b35';
-        const emoji = event.dance_styles.includes('salsa') ? '💃' :
-                     event.dance_styles.includes('bachata') ? '🕺' :
-                     event.dance_styles.includes('kizomba') ? '❤️' : '🎵';
+
+        // Prioriser le style filtré, sinon prendre le premier
+        let emoji;
+        if (activeFilter && event.dance_styles.includes(activeFilter)) {
+          // Si un filtre est actif ET l'événement contient ce style, utiliser son emoji
+          emoji = activeFilter === 'salsa' ? '💃' :
+                  activeFilter === 'bachata' ? '🕺' :
+                  activeFilter === 'kizomba' ? '❤️' : '🎵';
+        } else {
+          // Sinon, ordre de priorité par défaut
+          emoji = event.dance_styles.includes('salsa') ? '💃' :
+                  event.dance_styles.includes('bachata') ? '🕺' :
+                  event.dance_styles.includes('kizomba') ? '❤️' : '🎵';
+        }
 
         const icon = L.divIcon({
           html: `
@@ -874,6 +888,9 @@
         const style = chip.dataset.style;
         const free = chip.dataset.free;
         const lessons = chip.dataset.lessons;
+
+        // Sauvegarder le filtre actif pour les markers
+        activeFilter = style || null;
 
         let filtered = allEvents;
 
