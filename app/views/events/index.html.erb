@@ -266,6 +266,11 @@
       transform: scaleX(1);
     }
 
+    .event-card.highlighted {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
     .event-title {
       font-size: 1.25rem;
       font-weight: 700;
@@ -658,7 +663,10 @@
       <div class="events-grid">
         <% if @events.any? %>
           <% @events.each do |event| %>
-            <div class="event-card">
+            <div class="event-card"
+                 data-event-id="<%= event.id %>"
+                 data-lat="<%= event.latitude %>"
+                 data-lng="<%= event.longitude %>">
               <h3 class="event-title"><%= event.title %></h3>
 
               <div class="event-styles">
@@ -752,8 +760,10 @@
   <script>
     const map = L.map('map', { zoomControl: false }).setView([46.603354, 1.888334], 6);
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-      attribution: '© OpenStreetMap, © CartoDB'
+    // Tuiles OpenStreetMap standard (affiche en français pour la France)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19
     }).addTo(map);
 
     const markersLayer = L.layerGroup().addTo(map);
@@ -863,11 +873,11 @@
 
           userLayer.clearLayers();
           L.circleMarker([latitude, longitude], {
-            radius: 8,
+            radius: 10,
             color: '#ffffff',
-            fillColor: '#ff6b35',
+            fillColor: '#1976D2',
             fillOpacity: 1,
-            weight: 3
+            weight: 4
           }).addTo(userLayer);
 
           map.flyTo([latitude, longitude], 13);
@@ -899,6 +909,27 @@
         if (lessons) filtered = filtered.filter(e => e.has_lessons);
 
         renderMarkers(filtered);
+      });
+    });
+
+    // Interaction carte ↔ liste : Clic sur card → zoom carte
+    document.querySelectorAll('.event-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        // Ne pas trigger si on clique sur le lien "Voir détails"
+        if (e.target.closest('.event-cta')) return;
+
+        const lat = parseFloat(card.dataset.lat);
+        const lng = parseFloat(card.dataset.lng);
+
+        if (lat && lng) {
+          map.flyTo([lat, lng], 15, {
+            duration: 1.5
+          });
+
+          // Highlight visuel de la card
+          document.querySelectorAll('.event-card').forEach(c => c.classList.remove('highlighted'));
+          card.classList.add('highlighted');
+        }
       });
     });
   </script>
