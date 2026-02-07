@@ -1,0 +1,476 @@
+<%# app/views/pages/discover.html.erb %>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Découvre les danses latines — SalsaSpot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%= csrf_meta_tags %>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #ff6b35;
+      --secondary: #f7931e;
+      --bg-light: #fafafa;
+      --bg-card: #ffffff;
+      --text-primary: #1a1a1a;
+      --text-secondary: #666666;
+      --border: rgba(0, 0, 0, 0.1);
+      --shadow: rgba(0, 0, 0, 0.08);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg-light);
+      color: var(--text-primary);
+    }
+
+    /* NAVBAR */
+    .navbar {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.75rem;
+      letter-spacing: 0.05em;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .back-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: var(--primary);
+    }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(247, 147, 30, 0.1));
+      padding: 4rem 2rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.5rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* CONTAINER */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+
+    .dance-cards {
+      display: grid;
+      gap: 3rem;
+    }
+
+    /* DANCE CARD */
+    .dance-card {
+      background: var(--bg-card);
+      border-radius: 1.5rem;
+      overflow: hidden;
+      box-shadow: 0 4px 16px var(--shadow);
+      border: 2px solid transparent;
+      transition: all 0.3s;
+    }
+
+    .dance-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px var(--shadow);
+    }
+
+    .dance-header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      padding: 3rem 2rem;
+      text-align: center;
+      color: white;
+    }
+
+    .dance-emoji {
+      font-size: 5rem;
+      margin-bottom: 1rem;
+    }
+
+    .dance-header h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .dance-origin {
+      font-size: 1.125rem;
+      opacity: 0.9;
+      font-weight: 500;
+    }
+
+    .dance-body {
+      padding: 2.5rem;
+    }
+
+    .dance-section {
+      margin-bottom: 2rem;
+    }
+
+    .dance-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .dance-section h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .dance-section p {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      text-align: justify;
+    }
+
+    .dance-section ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .dance-section li {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      padding-left: 1.5rem;
+      position: relative;
+      margin-bottom: 0.5rem;
+    }
+
+    .dance-section li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 1.5rem;
+      line-height: 1.2;
+    }
+
+    .dance-vibe {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      padding: 1.5rem;
+      background: var(--bg-light);
+      border-radius: 1rem;
+      margin-top: 2rem;
+    }
+
+    .vibe-tag {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* CTA */
+    .cta-section {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: linear-gradient(135deg, rgba(255, 107, 53, 0.05), rgba(247, 147, 30, 0.05));
+      border-radius: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .cta-section h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 1.5rem;
+      color: var(--text-primary);
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 2.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      text-decoration: none;
+      border-radius: 3rem;
+      font-weight: 600;
+      font-size: 1.125rem;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero p {
+        font-size: 1rem;
+      }
+
+      .container {
+        padding: 2rem 1rem;
+      }
+
+      .dance-header {
+        padding: 2rem 1.5rem;
+      }
+
+      .dance-emoji {
+        font-size: 4rem;
+      }
+
+      .dance-header h2 {
+        font-size: 2.5rem;
+      }
+
+      .dance-body {
+        padding: 1.5rem;
+      }
+
+      .cta-section {
+        padding: 2rem 1rem;
+      }
+
+      .cta-section h2 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <%= link_to root_path, class: "navbar-brand" do %>
+      <div class="logo">SalsaSpot</div>
+    <% end %>
+    <%= link_to "← Retour à la carte", root_path, class: "back-link" %>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>✨ Découvre l'univers des danses latines</h1>
+    <p>Plonge dans l'histoire, la philosophie et l'énergie de la salsa, bachata et kizomba</p>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="container">
+    <div class="dance-cards">
+      <!-- SALSA -->
+      <div class="dance-card">
+        <div class="dance-header">
+          <div class="dance-emoji">💃</div>
+          <h2>Salsa</h2>
+          <p class="dance-origin">🇨🇺 Cuba • Années 1960</p>
+        </div>
+
+        <div class="dance-body">
+          <div class="dance-section">
+            <h3>🎺 Histoire</h3>
+            <p>
+              La salsa naît dans les rues bouillonnantes de La Havane et les quartiers latinos de New York dans les années 1960.
+              C'est le fruit d'un métissage culturel exceptionnel : les rythmes africains amenés par les esclaves,
+              les mélodies espagnoles des conquistadors, et l'énergie du jazz américain. Le son cubain, le mambo et le cha-cha-cha
+              fusionnent pour créer cette danse explosive qui deviendra un phénomène mondial.
+            </p>
+          </div>
+
+          <div class="dance-section">
+            <h3>💫 Philosophie</h3>
+            <p>
+              La salsa, c'est avant tout l'expression de la joie de vivre, de la "sabor" (la saveur) cubaine.
+              Danser la salsa, c'est raconter une histoire à deux, où le leader guide et le follower répond avec créativité.
+              C'est une conversation sans paroles, où chaque mouvement est une réponse au rythme et à son partenaire.
+              La salsa célèbre la spontanéité, l'improvisation et la connexion humaine.
+            </p>
+          </div>
+
+          <div class="dance-section">
+            <h3>🎵 Les essentiels</h3>
+            <ul>
+              <li><strong>Le rythme</strong> : En 8 temps, avec pause sur le 4 et le 8 (selon le style)</li>
+              <li><strong>Les styles</strong> : Cubaine (casino), Portoricaine (on2), Colombienne, LA style</li>
+              <li><strong>Les figures</strong> : Cross-body lead, Enchufla, Dile que no, Rueda de casino</li>
+              <li><strong>La musique</strong> : Clave, tumbao, montuno - les instruments sont les cuivres, congas et piano</li>
+              <li><strong>L'attitude</strong> : Énergie, précision technique, mais aussi lâcher-prise et feeling</li>
+            </ul>
+          </div>
+
+          <div class="dance-vibe">
+            <span class="vibe-tag">🔥 Énergie</span>
+            <span class="vibe-tag">❤️ Passion</span>
+            <span class="vibe-tag">🎺 Cuivres</span>
+            <span class="vibe-tag">⚡ Dynamisme</span>
+            <span class="vibe-tag">🎪 Festif</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- BACHATA -->
+      <div class="dance-card">
+        <div class="dance-header" style="background: linear-gradient(135deg, #e63946, #f77f00);">
+          <div class="dance-emoji">🕺</div>
+          <h2>Bachata</h2>
+          <p class="dance-origin">🇩🇴 République Dominicaine • Années 1960</p>
+        </div>
+
+        <div class="dance-body">
+          <div class="dance-section">
+            <h3>🎸 Histoire</h3>
+            <p>
+              La bachata émerge dans les quartiers populaires de Saint-Domingue au début des années 1960.
+              Longtemps méprisée par les élites dominicaines qui la considéraient comme une musique de "basse classe",
+              elle conquiert finalement le monde entier dans les années 2000. Son nom vient de "fiesta de patio"
+              (fête de quartier), et ses chansons parlent d'amour, de désillusion et de mélancolie avec une sincérité brute.
+            </p>
+          </div>
+
+          <div class="dance-section">
+            <h3>💫 Philosophie</h3>
+            <p>
+              La bachata, c'est la danse de l'âme et de la sensualité. Elle exprime la vulnérabilité émotionnelle,
+              le romantisme et l'intimité. Danser la bachata, c'est accepter de se rapprocher, de partager un moment
+              de connexion profonde avec son partenaire. Le mouvement de hanche emblématique n'est pas qu'une technique :
+              c'est l'expression du feeling, du "sentimiento" qui habite chaque danseur. C'est une danse où l'on ose
+              montrer ses émotions, où la douceur rencontre la passion.
+            </p>
+          </div>
+
+          <div class="dance-section">
+            <h3>🎵 Les essentiels</h3>
+            <ul>
+              <li><strong>Le rythme</strong> : En 8 temps, avec le fameux "tap" sur le 4 et le 8</li>
+              <li><strong>Les styles</strong> : Dominicaine (traditionnelle), Sensuelle, Moderna, Fusion</li>
+              <li><strong>Le mouvement de hanche</strong> : L'isolation des hanches qui donne ce côté hypnotique</li>
+              <li><strong>La musique</strong> : Guitare romantique, basse, bongos - voix mélancolique</li>
+              <li><strong>La connexion</strong> : Proximité, contact corporel, jeu de regards</li>
+            </ul>
+          </div>
+
+          <div class="dance-vibe">
+            <span class="vibe-tag">💫 Sensualité</span>
+            <span class="vibe-tag">🌙 Romance</span>
+            <span class="vibe-tag">🎸 Guitare</span>
+            <span class="vibe-tag">😌 Mélancolie</span>
+            <span class="vibe-tag">💝 Intimité</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- KIZOMBA -->
+      <div class="dance-card">
+        <div class="dance-header" style="background: linear-gradient(135deg, #c1121f, #780000);">
+          <div class="dance-emoji">❤️</div>
+          <h2>Kizomba</h2>
+          <p class="dance-origin">🇦🇴 Angola • Années 1980</p>
+        </div>
+
+        <div class="dance-body">
+          <div class="dance-section">
+            <h3>🌍 Histoire</h3>
+            <p>
+              La kizomba naît à Luanda, capitale de l'Angola, au début des années 1980, après l'indépendance du pays.
+              Son nom signifie "fête" en kimbundu, langue locale. Elle fusionne le semba (danse traditionnelle angolaise)
+              avec les influences des Caraïbes, notamment le zouk des Antilles françaises. Eduardo Paim est considéré
+              comme le pionnier de cette musique qui va séduire toute l'Afrique lusophone, puis l'Europe et le monde entier
+              à partir des années 2000.
+            </p>
+          </div>
+
+          <div class="dance-section">
+            <h3>💫 Philosophie</h3>
+            <p>
+              La kizomba est la danse de la connexion absolue, de la fusion de deux corps qui ne font qu'un.
+              C'est une conversation silencieuse où le moindre mouvement, la plus légère pression, transmet une intention.
+              On ne "fait" pas de la kizomba, on la ressent. C'est une méditation à deux, une transe douce où l'on
+              s'abandonne à la musique et à son partenaire. La kizomba enseigne l'écoute, la patience, la subtilité.
+              C'est une danse qui demande de lâcher le contrôle et de se laisser porter par le flow.
+            </p>
+          </div>
+
+          <div class="dance-section">
+            <h3>🎵 Les essentiels</h3>
+            <ul>
+              <li><strong>Le rythme</strong> : Lent et sensuel, souvent autour de 60-80 BPM</li>
+              <li><strong>Les styles</strong> : Kizomba traditionnelle, Urban Kiz, Tarraxinha, Semba</li>
+              <li><strong>La connexion</strong> : Contact corporel permanent, leader avec le torse, pas les bras</li>
+              <li><strong>La musique</strong> : Voix suave, rythmes électroniques doux, paroles en portugais/kimbundu</li>
+              <li><strong>Les mouvements</strong> : Fluidité, cambré, isolations subtiles, jeu de jambes circulaire</li>
+            </ul>
+          </div>
+
+          <div class="dance-vibe">
+            <span class="vibe-tag">🌊 Fluidité</span>
+            <span class="vibe-tag">🫂 Connexion</span>
+            <span class="vibe-tag">🎵 Douceur</span>
+            <span class="vibe-tag">🧘 Méditation</span>
+            <span class="vibe-tag">✨ Subtilité</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-section">
+      <h2>Prêt à danser ?</h2>
+      <%= link_to root_path, class: "cta-button" do %>
+        Trouve ta prochaine soirée 🎉
+      <% end %>
+    </div>
+  </div>
+</body>
+</html>

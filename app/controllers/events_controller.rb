@@ -11,6 +11,14 @@ class EventsController < ApplicationController
 
   def show
     @event = Event.friendly.find(params[:id])
+
+    # Charger les événements similaires dans la même ville
+    @similar_events = Event.active
+                           .upcoming
+                           .where(city: @event.city)
+                           .where.not(id: @event.id)
+                           .limit(3)
+
     render layout: false
   end
 

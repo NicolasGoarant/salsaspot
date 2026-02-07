@@ -8,6 +8,9 @@ Rails.application.routes.draw do
     end
   end
 
+  # Page découverte des danses
+  get '/decouvrir', to: 'pages#discover', as: :discover
+
   # Admin (optionnel pour plus tard)
   namespace :admin do
     resources :events
