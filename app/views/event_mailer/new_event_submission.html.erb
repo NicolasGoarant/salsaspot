@@ -1,0 +1,95 @@
+<%# app/views/event_mailer/new_event_submission.html.erb %>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, #ff6b35, #f7931e); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+    .content { background: #fff; padding: 30px; border: 1px solid #ddd; border-top: none; }
+    .event-details { background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0; }
+    .detail-row { margin: 10px 0; }
+    .label { font-weight: bold; color: #ff6b35; }
+    .btn { display: inline-block; background: #ff6b35; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin: 10px 5px; }
+    .btn-approve { background: #4CAF50; }
+    .btn-reject { background: #e63946; }
+    .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 15px; }
+    .photo-grid img { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎉 Nouvelle soirée proposée</h1>
+    </div>
+
+    <div class="content">
+      <p>Salut Nicolas,</p>
+
+      <p>Une nouvelle soirée vient d'être soumise sur SalsaSpot et attend ta validation !</p>
+
+      <div class="event-details">
+        <h2><%= @event.title %></h2>
+
+        <div class="detail-row">
+          <span class="label">📅 Date :</span> <%= l(@event.starts_at, format: :long) %>
+        </div>
+
+        <div class="detail-row">
+          <span class="label">📍 Lieu :</span> <%= @event.venue_name %>, <%= @event.address %>, <%= @event.city %>
+        </div>
+
+        <div class="detail-row">
+          <span class="label">💃 Styles :</span> <%= @event.dance_styles.join(', ') %>
+        </div>
+
+        <div class="detail-row">
+          <span class="label">💰 Prix :</span> <%= @event.price_display %>
+        </div>
+
+        <% if @event.description.present? %>
+          <div class="detail-row">
+            <span class="label">📝 Description :</span><br>
+            <%= simple_format(@event.description) %>
+          </div>
+        <% end %>
+
+        <div class="detail-row">
+          <span class="label">👤 Organisateur :</span> <%= @event.organizer_name %>
+        </div>
+
+        <div class="detail-row">
+          <span class="label">📧 Email :</span> <%= @event.organizer_email %>
+        </div>
+
+        <% if @event.phone.present? %>
+          <div class="detail-row">
+            <span class="label">📞 Téléphone :</span> <%= @event.phone %>
+          </div>
+        <% end %>
+
+        <% if @event.photos.attached? %>
+          <div class="detail-row">
+            <span class="label">📸 Photos :</span> <%= @event.photos.count %> photo(s) jointe(s)
+          </div>
+          <div class="photo-grid">
+            <% @event.photos.each do |photo| %>
+              <%= image_tag url_for(photo) %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
+      <div style="text-align: center; margin-top: 30px;">
+        <a href="<%= admin_event_url(@event) rescue '#' %>" class="btn btn-approve">✅ Approuver</a>
+        <a href="<%= admin_event_url(@event) rescue '#' %>" class="btn btn-reject">❌ Rejeter</a>
+      </div>
+
+      <p style="margin-top: 30px; color: #666; font-size: 14px;">
+        Tu peux gérer cet événement depuis l'interface d'administration.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

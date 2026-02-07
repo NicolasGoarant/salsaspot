@@ -64,3 +64,4 @@ gem 'geocoder'
 gem 'friendly_id'
 gem 'kaminari' # Pour pagination
 gem 'dotenv-rails', groups: [:development, :test]
+gem 'dotenv-rails', groups: [:development, :test]

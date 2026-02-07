@@ -4,7 +4,7 @@ class EventsController < ApplicationController
     @events = Event.active.upcoming
 
     respond_to do |format|
-      format.html { render layout: false } # Désactive le layout Rails
+      format.html { render layout: false }
       format.json { render json: @events }
     end
   end
@@ -29,12 +29,15 @@ class EventsController < ApplicationController
 
   def create
     @event = Event.new(event_params)
-    @event.is_active = false
+    @event.is_active = false # En attente de validation
 
     if @event.save
-      redirect_to events_path, notice: "Merci ! Ton événement sera publié après validation."
+      # Envoyer email de notification à l'admin
+      EventMailer.new_event_submission(@event).deliver_later
+
+      redirect_to events_path, notice: "Merci ! Ton événement sera publié après validation. Tu recevras un email de confirmation."
     else
-      render :new, layout: false
+      render :new, layout: false, status: :unprocessable_entity
     end
   end
 
@@ -47,7 +50,8 @@ class EventsController < ApplicationController
       :starts_at, :ends_at, :recurrence,
       :price, :is_free, :has_lessons, :lessons_time,
       :organizer_name, :organizer_email, :phone, :website, :facebook_url,
-      dance_styles: []
+      dance_styles: [],
+      photos: []
     )
   end
 end
