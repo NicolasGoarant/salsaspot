@@ -50,6 +50,8 @@
       align-items: center;
       flex-shrink: 0;
       box-shadow: 0 2px 8px var(--shadow);
+      position: relative;
+      z-index: 100;
     }
 
     .navbar-brand {
@@ -102,6 +104,111 @@
 
     .discover-link:hover {
       color: var(--primary);
+    }
+
+    .navbar-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    /* BURGER MENU (caché sur desktop) */
+    .burger-menu {
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      cursor: pointer;
+      padding: 0.5rem;
+      background: none;
+      border: none;
+    }
+
+    .burger-menu span {
+      width: 24px;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    .burger-menu.active span:nth-child(1) {
+      transform: rotate(45deg) translate(6px, 6px);
+    }
+
+    .burger-menu.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .burger-menu.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(6px, -6px);
+    }
+
+    /* Menu mobile déroulant */
+    .mobile-menu {
+      display: none;
+      position: absolute;
+      top: 100%; /* Juste en dessous de la navbar */
+      left: 0;
+      right: 0;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 4px 12px var(--shadow);
+      z-index: 1000;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .mobile-menu.active {
+      display: block;
+    }
+
+    .mobile-menu-content {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .mobile-menu-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.875rem 1rem;
+      background: var(--bg-elevated);
+      border-radius: 0.75rem;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-weight: 500;
+      font-size: 0.9375rem;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+
+    .mobile-menu-link:hover {
+      background: white;
+      border-color: var(--primary);
+      transform: translateX(4px);
+    }
+
+    .mobile-menu-link.primary {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      box-shadow: 0 2px 8px var(--primary-glow);
+    }
+
+    .mobile-menu-link.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px var(--primary-glow);
     }
 
     /* FILTRES */
@@ -505,25 +612,49 @@
 
     @media (max-width: 768px) {
       footer {
-        padding: 0.75rem 0.75rem;
+        padding: 1.5rem 1rem;
       }
 
       .footer-content {
         flex-direction: column;
-        gap: 0.75rem;
+        gap: 1.5rem;
         align-items: flex-start;
       }
 
       .footer-brand {
         max-width: 100%;
+        text-align: left;
+      }
+
+      .footer-description {
+        font-size: 0.875rem;
+      }
+
+      .footer-section {
+        width: 100%;
+      }
+
+      .footer-section h3 {
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
       }
 
       .footer-links {
-        gap: 0.75rem;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .footer-links li {
+        font-size: 0.875rem;
       }
 
       .footer-links li:not(:last-child)::after {
-        right: -0.45rem;
+        right: -0.35rem;
+      }
+
+      .footer-bottom {
+        padding-top: 1rem;
+        font-size: 0.8125rem;
       }
     }
 
@@ -562,14 +693,21 @@
         font-size: 1.5rem;
       }
 
-      .navbar-cta {
-        padding: 0.5rem 1rem;
-        font-size: 0.8125rem;
-        white-space: nowrap;
+      .navbar-brand {
+        flex-shrink: 0;
       }
 
       .tagline {
         display: none;
+      }
+
+      /* Masquer les actions desktop, afficher burger */
+      .navbar-actions {
+        display: none;
+      }
+
+      .burger-menu {
+        display: flex;
       }
 
       .filters {
@@ -612,24 +750,78 @@
       .event-title {
         font-size: 1.125rem;
       }
+
+      .event-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+
+      .event-footer {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .event-cta {
+        width: 100%;
+        text-align: center;
+      }
+
+      .map-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 1.25rem;
+      }
+
+      .map-controls {
+        bottom: 1rem;
+        right: 1rem;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <%= link_to events_path, class: "navbar-brand" do %>
-      <div class="logo">SalsaSpot</div>
-      <span class="tagline">🎵 Trouve ta soirée latino</span>
-    <% end %>
-
-    <div style="display: flex; gap: 1rem; align-items: center;">
-      <%= link_to "✨ Découvrir les danses", discover_path, class: "discover-link" %>
-      <%= link_to new_event_path, class: "navbar-cta" do %>
-        ➕ Ajouter une soirée
+  <!-- HEADER WRAPPER -->
+  <div style="position: relative;">
+    <!-- NAVBAR -->
+    <nav class="navbar">
+      <%= link_to events_path, class: "navbar-brand" do %>
+        <div class="logo">SalsaSpot</div>
+        <span class="tagline">🎵 Trouve ta soirée latino</span>
       <% end %>
+
+      <!-- Menu desktop -->
+      <div class="navbar-actions">
+        <%= link_to discover_path, class: "discover-link" do %>
+          ✨ Découvrir les danses
+        <% end %>
+        <%= link_to new_event_path, class: "navbar-cta" do %>
+          ➕ Ajouter une soirée
+        <% end %>
+      </div>
+
+      <!-- Burger mobile -->
+      <button class="burger-menu" id="burger-btn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </nav>
+
+    <!-- Menu mobile déroulant -->
+    <div class="mobile-menu" id="mobile-menu">
+      <div class="mobile-menu-content">
+        <%= link_to discover_path, class: "mobile-menu-link" do %>
+          <span style="font-size: 1.5rem;">✨</span>
+          <span>Découvrir les danses</span>
+        <% end %>
+        <%= link_to new_event_path, class: "mobile-menu-link primary" do %>
+          <span style="font-size: 1.5rem;">➕</span>
+          <span>Ajouter une soirée</span>
+        <% end %>
+      </div>
     </div>
-  </nav>
+  </div>
 
   <!-- FILTRES -->
   <div class="filters">
@@ -932,6 +1124,33 @@
         }
       });
     });
+
+    // Burger menu mobile
+    const burgerBtn = document.getElementById('burger-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    if (burgerBtn && mobileMenu) {
+      burgerBtn.addEventListener('click', () => {
+        burgerBtn.classList.toggle('active');
+        mobileMenu.classList.toggle('active');
+      });
+
+      // Fermer le menu si on clique sur un lien
+      document.querySelectorAll('.mobile-menu-link').forEach(link => {
+        link.addEventListener('click', () => {
+          burgerBtn.classList.remove('active');
+          mobileMenu.classList.remove('active');
+        });
+      });
+
+      // Fermer le menu si on clique en dehors
+      document.addEventListener('click', (e) => {
+        if (!burgerBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+          burgerBtn.classList.remove('active');
+          mobileMenu.classList.remove('active');
+        }
+      });
+    }
   </script>
 </body>
 </html>
