@@ -24,10 +24,17 @@ class Event < ApplicationRecord
     is_free ? 'Gratuit' : "#{price}€"
   end
 
+# app/models/event.rb
   def photo_url
     return nil unless photos.attached?
-    blob = photos.first
-    Cloudinary::Utils.cloudinary_url(blob.key)
+
+    if Rails.env.production?
+      blob = photos.first
+      Cloudinary::Utils.cloudinary_url(blob.key)
+    else
+      # En développement : chemin relatif
+      Rails.application.routes.url_helpers.rails_blob_path(photos.first, only_path: true)
+    end
   end
 
   private
