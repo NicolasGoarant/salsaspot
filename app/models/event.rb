@@ -24,6 +24,12 @@ class Event < ApplicationRecord
     is_free ? 'Gratuit' : "#{price}€"
   end
 
+  def photo_url
+    return nil unless photos.attached?
+    blob = photos.first
+    Cloudinary::Utils.cloudinary_url(blob.key)
+  end
+
   private
 
   def geocode_address

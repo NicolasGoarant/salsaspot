@@ -8,7 +8,7 @@ class EventsController < ApplicationController
       format.json {
         render json: @events.map { |event|
           event.as_json.merge(
-            photo_url: event.photos.attached? ? url_for(event.photos.first) : nil
+            photo_url: event.photo_url  # Utilise la nouvelle méthode
           )
         }
       }
