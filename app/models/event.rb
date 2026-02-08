@@ -30,13 +30,4 @@ class Event < ApplicationRecord
     # Tu peux utiliser Geocoder gem ou une API de géocodage
     # Pour l'instant on laisse nil, tu pourras implémenter plus tard
   end
-
-  def level_display
-    case level
-    when 'debutant' then '🟢 Débutant'
-    when 'intermediaire' then '🟡 Intermédiaire'
-    when 'avance' then '🔴 Avancé'
-    else '⚪️ Tous niveaux'
-    end
-  end
 end
