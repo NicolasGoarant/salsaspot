@@ -944,7 +944,7 @@
               <div class="event-left">
                 <%# Photo de l'événement %>
                 <% if event.photos.attached? %>
-                  <div class="event-image" style="background-image: url(<%= url_for(event.photos.first) %>)"></div>
+                  <div class="event-image" style="background-image: url(<%= event.photo_url %>)"></div>
                 <% else %>
                   <div class="event-image event-placeholder">
                     <% emoji = event.dance_styles.include?('salsa') ? '💃' :
