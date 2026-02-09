@@ -1,0 +1,155 @@
+<%# app/views/pages/mentions_legales.html.erb %>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Mentions légales - SalsaSpot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Righteous&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #ff6b35;
+      --bg-light: #fafafa;
+      --bg-card: #ffffff;
+      --text-primary: #1a1a1a;
+      --text-secondary: #666666;
+      --border: rgba(0, 0, 0, 0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-light);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    .navbar {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+    }
+
+    .logo {
+      font-family: 'Righteous', sans-serif;
+      font-size: 1.75rem;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    h1 {
+      font-family: 'Righteous', sans-serif;
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 2rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+
+    p {
+      margin-bottom: 1rem;
+      color: var(--text-secondary);
+    }
+
+    .info-box {
+      background: var(--bg-card);
+      border-left: 4px solid var(--primary);
+      padding: 1.5rem;
+      margin: 2rem 0;
+      border-radius: 0.5rem;
+    }
+
+    .back-link {
+      display: inline-block;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      margin-bottom: 2rem;
+      transition: opacity 0.2s;
+    }
+
+    .back-link:hover {
+      opacity: 0.7;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 2rem 1rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <%= link_to root_path, class: "logo" do %>
+      SalsaSpot
+    <% end %>
+  </nav>
+
+  <div class="container">
+    <%= link_to "← Retour à l'accueil", root_path, class: "back-link" %>
+
+    <h1>Mentions légales</h1>
+
+    <h2>1. Éditeur du site</h2>
+    <div class="info-box">
+      <p><strong>SalsaSpot</strong></p>
+      <p>Micro-entreprise en cours de création</p>
+      <p>Siège social : Nancy, France</p>
+      <p>Email : contact@salsaspot.fr</p>
+      <p>Directeur de la publication : Nicolas Goarant</p>
+    </div>
+
+    <h2>2. Hébergement</h2>
+    <p><strong>Heroku (Salesforce)</strong></p>
+    <p>Salesforce Tower, 415 Mission Street, 3rd Floor, San Francisco, CA 94105, États-Unis</p>
+
+    <h2>3. Propriété intellectuelle</h2>
+    <p>L'ensemble du contenu de ce site (textes, images, logos, vidéos) est la propriété exclusive de SalsaSpot, sauf mention contraire. Toute reproduction, même partielle, est interdite sans autorisation préalable.</p>
+    <p>Les photos d'événements sont la propriété de leurs auteurs respectifs et sont utilisées avec autorisation ou sous licence libre de droits.</p>
+
+    <h2>4. Données personnelles</h2>
+    <p>Les données personnelles collectées sur ce site sont traitées conformément au RGPD. Pour plus d'informations, consultez notre <%= link_to "Politique de confidentialité", politique_path, style: "color: var(--primary);" %>.</p>
+
+    <h2>5. Cookies</h2>
+    <p>Ce site utilise uniquement des cookies techniques nécessaires à son bon fonctionnement. Aucun cookie publicitaire ou de tracking n'est utilisé.</p>
+
+    <h2>6. Responsabilité</h2>
+    <p>SalsaSpot ne peut être tenu responsable :</p>
+    <p>• Des informations erronées fournies par les organisateurs d'événements</p>
+    <p>• De l'annulation ou modification d'événements sans préavis</p>
+    <p>• Des contenus publiés par les utilisateurs</p>
+    <p>• Des interruptions temporaires du service</p>
+
+    <h2>7. Droit applicable</h2>
+    <p>Le présent site est soumis au droit français. En cas de litige, les tribunaux français seront seuls compétents.</p>
+
+    <p style="margin-top: 3rem; font-size: 0.875rem; color: var(--text-secondary);">
+      Dernière mise à jour : <%= Time.current.strftime("%d/%m/%Y") %>
+    </p>
+  </div>
+</body>
+</html>

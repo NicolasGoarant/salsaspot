@@ -1,0 +1,227 @@
+<%# app/views/pages/cgu.html.erb %>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>CGU - SalsaSpot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Righteous&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #ff6b35;
+      --bg-light: #fafafa;
+      --bg-card: #ffffff;
+      --text-primary: #1a1a1a;
+      --text-secondary: #666666;
+      --border: rgba(0, 0, 0, 0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-light);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    .navbar {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+    }
+
+    .logo {
+      font-family: 'Righteous', sans-serif;
+      font-size: 1.75rem;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    h1 {
+      font-family: 'Righteous', sans-serif;
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 2rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+
+    p, li {
+      margin-bottom: 1rem;
+      color: var(--text-secondary);
+    }
+
+    ul {
+      margin-left: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .warning-box {
+      background: rgba(230, 57, 70, 0.1);
+      border-left: 4px solid #e63946;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      border-radius: 0.5rem;
+    }
+
+    .back-link {
+      display: inline-block;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      margin-bottom: 2rem;
+      transition: opacity 0.2s;
+    }
+
+    .back-link:hover {
+      opacity: 0.7;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 2rem 1rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <%= link_to root_path, class: "logo" do %>
+      SalsaSpot
+    <% end %>
+  </nav>
+
+  <div class="container">
+    <%= link_to "← Retour à l'accueil", root_path, class: "back-link" %>
+
+    <h1>Conditions Générales d'Utilisation</h1>
+
+    <p><strong>Date d'entrée en vigueur :</strong> <%= Time.current.strftime("%d/%m/%Y") %></p>
+
+    <h2>1. Objet</h2>
+    <p>Les présentes Conditions Générales d'Utilisation (CGU) régissent l'utilisation du site web <strong>SalsaSpot</strong>, accessible à l'adresse salsaspot.fr (ci-après "le Site").</p>
+    <p>En accédant au Site, vous acceptez sans réserve les présentes CGU.</p>
+
+    <h2>2. Description du service</h2>
+    <p>SalsaSpot est une plateforme gratuite permettant de :</p>
+    <ul>
+      <li>Découvrir des événements de danses latines (salsa, bachata, kizomba) en France</li>
+      <li>Consulter les détails des soirées (horaires, lieux, tarifs)</li>
+      <li>Géolocaliser les événements sur une carte interactive</li>
+      <li>Publier des événements (pour les organisateurs)</li>
+    </ul>
+
+    <h2>3. Accès au service</h2>
+    <p>Le Site est accessible gratuitement à tout utilisateur disposant d'une connexion Internet.</p>
+    <p>SalsaSpot se réserve le droit de :</p>
+    <ul>
+      <li>Modifier, suspendre ou interrompre temporairement l'accès au Site</li>
+      <li>Refuser l'accès au Site en cas d'usage abusif</li>
+      <li>Supprimer tout contenu inapproprié sans préavis</li>
+    </ul>
+
+    <h2>4. Publication d'événements</h2>
+
+    <h3>4.1 Responsabilité des organisateurs</h3>
+    <p>Les organisateurs d'événements s'engagent à :</p>
+    <ul>
+      <li>Fournir des informations <strong>exactes et à jour</strong></li>
+      <li>Respecter la législation en vigueur (droits d'auteur, sécurité, fiscalité)</li>
+      <li>Ne pas publier de contenu illégal, diffamatoire ou discriminatoire</li>
+      <li>Informer SalsaSpot de toute annulation ou modification d'événement</li>
+    </ul>
+
+    <h3>4.2 Modération</h3>
+    <p>SalsaSpot se réserve le droit de :</p>
+    <ul>
+      <li>Refuser ou supprimer tout événement ne respectant pas les CGU</li>
+      <li>Vérifier l'exactitude des informations publiées</li>
+      <li>Contacter les organisateurs pour validation</li>
+    </ul>
+
+    <div class="warning-box">
+      <p><strong>⚠️ Important :</strong> SalsaSpot n'est qu'un annuaire. Nous ne sommes pas organisateurs des événements et n'assumons aucune responsabilité quant à leur déroulement, annulation ou qualité.</p>
+    </div>
+
+    <h2>5. Propriété intellectuelle</h2>
+    <p>Tous les éléments du Site (textes, images, logos, code) sont protégés par le droit d'auteur.</p>
+    <p>Les organisateurs conservent la propriété de leurs contenus (photos, descriptions) et accordent à SalsaSpot une licence non-exclusive pour les afficher sur le Site.</p>
+
+    <h2>6. Données personnelles</h2>
+    <p>L'utilisation du Site implique le traitement de données personnelles conformément à notre <%= link_to "Politique de confidentialité", politique_path, style: "color: var(--primary);" %>.</p>
+
+    <h2>7. Responsabilité</h2>
+
+    <h3>7.1 Limitation de responsabilité</h3>
+    <p>SalsaSpot ne peut être tenu responsable :</p>
+    <ul>
+      <li>Des informations erronées publiées par les organisateurs</li>
+      <li>De l'annulation, modification ou non-conformité d'un événement</li>
+      <li>Des dommages directs ou indirects liés à l'utilisation du Site</li>
+      <li>Des interruptions temporaires du service (maintenance, pannes)</li>
+      <li>Des contenus de sites tiers (liens externes)</li>
+    </ul>
+
+    <h3>7.2 Garanties de l'utilisateur</h3>
+    <p>L'utilisateur s'engage à :</p>
+    <ul>
+      <li>Vérifier les informations auprès des organisateurs avant de se déplacer</li>
+      <li>Utiliser le Site de manière loyale et respectueuse</li>
+      <li>Ne pas tenter d'accéder aux parties sécurisées du Site</li>
+      <li>Ne pas collecter de données personnelles d'autres utilisateurs</li>
+    </ul>
+
+    <h2>8. Contenus interdits</h2>
+    <p>Il est strictement interdit de publier :</p>
+    <ul>
+      <li>Contenus à caractère pornographique, violent ou haineux</li>
+      <li>Contenus diffamatoires, injurieux ou discriminatoires</li>
+      <li>Fausses informations ou publicité mensongère</li>
+      <li>Contenus violant la propriété intellectuelle de tiers</li>
+      <li>Spam, phishing ou liens malveillants</li>
+    </ul>
+
+    <h2>9. Signalement</h2>
+    <p>Pour signaler un contenu inapproprié ou une erreur : <strong>contact@salsaspot.fr</strong></p>
+
+    <h2>10. Modifications des CGU</h2>
+    <p>SalsaSpot se réserve le droit de modifier les présentes CGU à tout moment. Les modifications entreront en vigueur dès leur publication sur cette page.</p>
+    <p>Il est recommandé de consulter régulièrement cette page.</p>
+
+    <h2>11. Droit applicable et juridiction</h2>
+    <p>Les présentes CGU sont régies par le droit français.</p>
+    <p>En cas de litige, les parties s'efforceront de trouver une solution amiable. À défaut, les tribunaux français seront seuls compétents.</p>
+
+    <h2>12. Contact</h2>
+    <p>Pour toute question relative aux CGU :</p>
+    <p>📧 <strong>contact@salsaspot.fr</strong></p>
+
+    <p style="margin-top: 3rem; font-size: 0.875rem; color: var(--text-secondary);">
+      Dernière mise à jour : <%= Time.current.strftime("%d/%m/%Y") %>
+    </p>
+  </div>
+</body>
+</html>

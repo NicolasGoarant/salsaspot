@@ -11,6 +11,12 @@ Rails.application.routes.draw do
   # Page découverte des danses
   get '/decouvrir', to: 'pages#discover', as: :discover
 
+  # Pages légales
+  get 'mentions-legales', to: 'pages#mentions_legales', as: 'mentions'
+  get 'politique-de-confidentialite', to: 'pages#politique', as: 'politique'
+  get 'cgu', to: 'pages#cgu', as: 'cgu'
+  get 'contact', to: 'pages#contact', as: 'contact'
+
   # Admin (optionnel pour plus tard)
   namespace :admin do
     resources :events

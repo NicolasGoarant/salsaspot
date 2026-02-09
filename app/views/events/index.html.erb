@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Righteous&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -33,7 +33,7 @@
     html, body { height: 100%; overflow: hidden; }
 
     body {
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Poppins', sans-serif;
       background: var(--bg-light);
       color: var(--text-primary);
       display: flex;
@@ -62,7 +62,7 @@
     }
 
     .logo {
-      font-family: 'Bebas Neue', sans-serif;
+      font-family: 'Righteous', sans-serif;
       font-size: 1.75rem;
       letter-spacing: 0.05em;
       background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -95,15 +95,24 @@
     }
 
     .discover-link {
-      color: var(--text-secondary);
+      background: rgba(255, 107, 53, 0.1); /* Orange très léger */
+      color: var(--primary);
+      border: 1px solid rgba(255, 107, 53, 0.3);
+      padding: 0.625rem 1.25rem;
+      border-radius: 2rem;
       text-decoration: none;
-      font-weight: 500;
+      font-weight: 600;
       font-size: 0.9375rem;
-      transition: color 0.2s;
+      transition: all 0.3s;
+      display: inline-block;
     }
 
     .discover-link:hover {
-      color: var(--primary);
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
     }
 
     .navbar-actions {
@@ -209,6 +218,27 @@
     .mobile-menu-link.primary:hover {
       transform: translateY(-2px);
       box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    /* Dans @media (max-width: 640px) */
+
+/* Dans la section @media (max-width: 640px) de ton index.html.erb */
+
+    .events-header {
+      padding: 1rem;
+      gap: 0.5rem; /* Réduire l'espace entre titre et badge */
+    }
+
+    .events-header h2 {
+      font-size: 1.375rem; /* Réduire la taille */
+      flex-shrink: 0; /* Empêche la compression */
+    }
+
+    .events-count {
+      font-size: 0.75rem; /* Plus petit */
+      padding: 0.25rem 0.625rem; /* Padding réduit */
+      white-space: nowrap;
+      flex-shrink: 0; /* Empêche la compression */
     }
 
     /* FILTRES */
@@ -792,8 +822,18 @@
         padding: 1rem;
       }
 
+      .events-header {
+        padding: 1rem 0.5rem;
+        gap: 0.5rem;
+      }
+
       .events-header h2 {
-        font-size: 1.5rem;
+        font-size: 1.25rem; /* Plus petit sur mobile */
+      }
+
+      .events-count {
+        font-size: 0.6875rem; /* Encore plus petit sur mobile */
+        padding: 0.25rem 0.5rem;
       }
 
       .event-card {
@@ -1020,40 +1060,6 @@
   </div>
 
   <!-- FOOTER -->
-  <footer>
-    <div class="footer-content">
-      <div class="footer-brand">
-        <div class="footer-logo">SalsaSpot</div>
-        <p class="footer-description">
-          La plateforme pour découvrir toutes les soirées salsa, bachata et kizomba près de chez toi.
-          Rejoins la communauté latino !
-        </p>
-      </div>
-
-      <div class="footer-section">
-        <h3>Navigation</h3>
-        <ul class="footer-links">
-          <li><%= link_to "Carte des soirées", events_path %></li>
-          <li><%= link_to "Ajouter une soirée", new_event_path %></li>
-        </ul>
-      </div>
-
-      <div class="footer-section">
-        <h3>Légal</h3>
-        <ul class="footer-links">
-          <li><a href="#">Mentions légales</a></li>
-          <li><a href="#">Politique de confidentialité</a></li>
-          <li><a href="#">CGU</a></li>
-          <li><a href="#">Contact</a></li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="footer-bottom">
-      <p>&copy; <%= Time.current.year %> SalsaSpot. Fait avec ❤️ pour la communauté latino.</p>
-    </div>
-  </footer>
-
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
@@ -1270,5 +1276,41 @@
       });
     }
   </script>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="footer-logo">SalsaSpot</div>
+        <p class="footer-description">
+          La plateforme pour découvrir toutes les soirées salsa, bachata et kizomba près de chez toi.
+          Rejoins la communauté latino !
+        </p>
+      </div>
+
+      <div class="footer-section">
+        <h3>Navigation</h3>
+        <ul class="footer-links">
+          <li><%= link_to "Carte des soirées", root_path %></li>
+          <li><%= link_to "Ajouter une soirée", new_event_path %></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h3>Légal</h3>
+        <ul class="footer-links">
+          <li><%= link_to "Mentions légales", mentions_path %></li>
+          <li><%= link_to "Politique de confidentialité", politique_path %></li>
+          <li><%= link_to "CGU", cgu_path %></li>
+          <li><%= link_to "Contact", contact_path %></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; <%= Time.current.year %> SalsaSpot. Fait avec ❤️ pour la communauté latino.</p>
+    </div>
+  </footer>
+
 </body>
 </html>

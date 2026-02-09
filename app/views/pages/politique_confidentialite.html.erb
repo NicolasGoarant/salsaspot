@@ -1,0 +1,231 @@
+<%# app/views/pages/politique_confidentialite.html.erb %>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Politique de confidentialité - SalsaSpot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Righteous&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #ff6b35;
+      --bg-light: #fafafa;
+      --bg-card: #ffffff;
+      --text-primary: #1a1a1a;
+      --text-secondary: #666666;
+      --border: rgba(0, 0, 0, 0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-light);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    .navbar {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+    }
+
+    .logo {
+      font-family: 'Righteous', sans-serif;
+      font-size: 1.75rem;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    h1 {
+      font-family: 'Righteous', sans-serif;
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 2rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+    }
+
+    p, li {
+      margin-bottom: 1rem;
+      color: var(--text-secondary);
+    }
+
+    ul {
+      margin-left: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .highlight-box {
+      background: rgba(255, 107, 53, 0.1);
+      border-left: 4px solid var(--primary);
+      padding: 1.5rem;
+      margin: 2rem 0;
+      border-radius: 0.5rem;
+    }
+
+    .back-link {
+      display: inline-block;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      margin-bottom: 2rem;
+      transition: opacity 0.2s;
+    }
+
+    .back-link:hover {
+      opacity: 0.7;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 2rem 1rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <%= link_to root_path, class: "logo" do %>
+      SalsaSpot
+    <% end %>
+  </nav>
+
+  <div class="container">
+    <%= link_to "← Retour à l'accueil", root_path, class: "back-link" %>
+
+    <h1>Politique de confidentialité</h1>
+
+    <div class="highlight-box">
+      <p><strong>En bref :</strong> SalsaSpot respecte votre vie privée. Nous collectons uniquement les données nécessaires au fonctionnement du service et ne les partageons jamais avec des tiers à des fins commerciales.</p>
+    </div>
+
+    <h2>1. Responsable du traitement</h2>
+    <p><strong>SalsaSpot</strong></p>
+    <p>Email : contact@salsaspot.fr</p>
+    <p>Siège social : Nancy, France</p>
+
+    <h2>2. Données collectées</h2>
+
+    <h3>2.1 Pour les visiteurs</h3>
+    <ul>
+      <li><strong>Données de navigation :</strong> Adresse IP, navigateur, pages visitées (via logs serveur)</li>
+      <li><strong>Géolocalisation approximative :</strong> Ville/région (si vous activez la géolocalisation sur la carte)</li>
+      <li><strong>Cookies techniques :</strong> Session Rails (nécessaire au fonctionnement)</li>
+    </ul>
+
+    <h3>2.2 Pour les organisateurs d'événements</h3>
+    <ul>
+      <li>Nom de l'organisateur</li>
+      <li>Email de contact</li>
+      <li>Téléphone (optionnel)</li>
+      <li>Nom de la salle/lieu</li>
+      <li>Informations sur l'événement (titre, description, prix, horaires)</li>
+    </ul>
+
+    <h2>3. Finalités du traitement</h2>
+    <p>Vos données sont utilisées pour :</p>
+    <ul>
+      <li>Afficher les événements sur la carte et dans les listes</li>
+      <li>Permettre aux utilisateurs de contacter les organisateurs</li>
+      <li>Améliorer le fonctionnement du site (analyse des erreurs, statistiques anonymes)</li>
+      <li>Répondre à vos demandes de contact</li>
+    </ul>
+
+    <h2>4. Base légale</h2>
+    <ul>
+      <li><strong>Intérêt légitime :</strong> Fournir un service de découverte d'événements</li>
+      <li><strong>Consentement :</strong> Géolocalisation (vous pouvez refuser)</li>
+      <li><strong>Obligation légale :</strong> Conservation des données de connexion (1 an, loi française)</li>
+    </ul>
+
+    <h2>5. Partage des données</h2>
+    <p>Vos données ne sont <strong>jamais vendues</strong> à des tiers.</p>
+    <p>Elles peuvent être partagées avec :</p>
+    <ul>
+      <li><strong>Heroku (Salesforce) :</strong> Hébergement du site (États-Unis, clauses contractuelles types)</li>
+      <li><strong>Cloudinary :</strong> Stockage des photos d'événements</li>
+      <li><strong>Autorités légales :</strong> Sur réquisition judiciaire uniquement</li>
+    </ul>
+
+    <h2>6. Durée de conservation</h2>
+    <ul>
+      <li><strong>Événements :</strong> Supprimés automatiquement 30 jours après leur date de fin</li>
+      <li><strong>Logs serveur :</strong> 12 mois</li>
+      <li><strong>Données de contact :</strong> Supprimées à votre demande</li>
+    </ul>
+
+    <h2>7. Vos droits (RGPD)</h2>
+    <p>Conformément au RGPD, vous disposez des droits suivants :</p>
+    <ul>
+      <li><strong>Accès :</strong> Obtenir une copie de vos données</li>
+      <li><strong>Rectification :</strong> Corriger des données inexactes</li>
+      <li><strong>Suppression :</strong> Demander l'effacement de vos données</li>
+      <li><strong>Opposition :</strong> Vous opposer au traitement</li>
+      <li><strong>Portabilité :</strong> Récupérer vos données dans un format structuré</li>
+      <li><strong>Limitation :</strong> Limiter le traitement dans certains cas</li>
+    </ul>
+
+    <p>Pour exercer ces droits, contactez-nous à : <strong>contact@salsaspot.fr</strong></p>
+    <p>Vous pouvez également déposer une réclamation auprès de la CNIL : <a href="https://www.cnil.fr" target="_blank" style="color: var(--primary);">www.cnil.fr</a></p>
+
+    <h2>8. Sécurité</h2>
+    <p>Nous mettons en œuvre les mesures suivantes :</p>
+    <ul>
+      <li>Connexion HTTPS (chiffrement SSL/TLS)</li>
+      <li>Accès restreint aux données (authentification)</li>
+      <li>Sauvegardes régulières</li>
+      <li>Hébergement sécurisé (Heroku - certification ISO 27001)</li>
+    </ul>
+
+    <h2>9. Cookies</h2>
+    <p>SalsaSpot utilise uniquement des <strong>cookies techniques</strong> nécessaires au fonctionnement :</p>
+    <ul>
+      <li><strong>_salsaspot_session :</strong> Identifiant de session (expire à la fermeture du navigateur)</li>
+    </ul>
+    <p>Aucun cookie publicitaire, de tracking ou analytique n'est utilisé.</p>
+
+    <h2>10. Modifications</h2>
+    <p>Cette politique peut être mise à jour. Les modifications importantes seront communiquées sur cette page.</p>
+
+    <h2>11. Contact</h2>
+    <p>Pour toute question sur cette politique ou l'exercice de vos droits :</p>
+    <p>📧 <strong>contact@salsaspot.fr</strong></p>
+
+    <p style="margin-top: 3rem; font-size: 0.875rem; color: var(--text-secondary);">
+      Dernière mise à jour : <%= Time.current.strftime("%d/%m/%Y") %>
+    </p>
+  </div>
+</body>
+</html>

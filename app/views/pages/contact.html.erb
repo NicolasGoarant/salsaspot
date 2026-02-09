@@ -1,0 +1,278 @@
+<%# app/views/pages/contact.html.erb %>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact - SalsaSpot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Righteous&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #ff6b35;
+      --bg-light: #fafafa;
+      --bg-card: #ffffff;
+      --text-primary: #1a1a1a;
+      --text-secondary: #666666;
+      --border: rgba(0, 0, 0, 0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-light);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    .navbar {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+    }
+
+    .logo {
+      font-family: 'Righteous', sans-serif;
+      font-size: 1.75rem;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    h1 {
+      font-family: 'Righteous', sans-serif;
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    .subtitle {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      margin-bottom: 3rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+
+    p {
+      margin-bottom: 1rem;
+      color: var(--text-secondary);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+
+    .contact-card {
+      background: var(--bg-card);
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .contact-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .contact-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .contact-card h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+    }
+
+    .contact-card a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      transition: opacity 0.2s;
+    }
+
+    .contact-card a:hover {
+      opacity: 0.7;
+    }
+
+    .faq-section {
+      background: var(--bg-card);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .faq-item {
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .faq-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .faq-question {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      font-size: 1.125rem;
+    }
+
+    .faq-answer {
+      color: var(--text-secondary);
+    }
+
+    .back-link {
+      display: inline-block;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      margin-bottom: 2rem;
+      transition: opacity 0.2s;
+    }
+
+    .back-link:hover {
+      opacity: 0.7;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 2rem 1rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <%= link_to root_path, class: "logo" do %>
+      SalsaSpot
+    <% end %>
+  </nav>
+
+  <div class="container">
+    <%= link_to "← Retour à l'accueil", root_path, class: "back-link" %>
+
+    <h1>Contact</h1>
+    <p class="subtitle">Une question ? Un événement à ajouter ? N'hésitez pas à nous contacter !</p>
+
+    <div class="contact-grid">
+      <div class="contact-card">
+        <div class="contact-icon">📧</div>
+        <h3>Email</h3>
+        <p>Pour toute demande générale</p>
+        <a href="mailto:contact@salsaspot.fr">contact@salsaspot.fr</a>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-icon">🎉</div>
+        <h3>Organisateurs</h3>
+        <p>Ajouter votre événement</p>
+        <%= link_to "Publier une soirée", new_event_path %>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-icon">🐛</div>
+        <h3>Signaler un bug</h3>
+        <p>Problème technique</p>
+        <a href="mailto:contact@salsaspot.fr?subject=Bug">Nous informer</a>
+      </div>
+    </div>
+
+    <h2>❓ Questions fréquentes</h2>
+
+    <div class="faq-section">
+      <div class="faq-item">
+        <div class="faq-question">Comment ajouter mon événement ?</div>
+        <div class="faq-answer">
+          Cliquez sur le bouton "➕ Ajouter une soirée" en haut à droite. Remplissez le formulaire avec les informations de votre événement. Votre soirée sera publiée après validation.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">SalsaSpot est-il gratuit ?</div>
+        <div class="faq-answer">
+          Oui, SalsaSpot est 100% gratuit pour les utilisateurs et les organisateurs. Nous ne prenons aucune commission sur les événements.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Comment modifier ou supprimer mon événement ?</div>
+        <div class="faq-answer">
+          Contactez-nous à contact@salsaspot.fr avec le lien de votre événement. Nous effectuerons les modifications dans les plus brefs délais.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Les événements sont-ils vérifiés ?</div>
+        <div class="faq-answer">
+          Oui, nous vérifions chaque événement avant publication. Nous nous réservons le droit de refuser ou supprimer tout contenu inapproprié.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Comment signaler une erreur ?</div>
+        <div class="faq-answer">
+          Envoyez-nous un email à contact@salsaspot.fr en précisant le nom de l'événement et la nature de l'erreur. Nous corrigerons rapidement.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Puis-je proposer une amélioration ?</div>
+        <div class="faq-answer">
+          Absolument ! Nous sommes toujours à l'écoute de vos suggestions pour améliorer SalsaSpot. Contactez-nous par email.
+        </div>
+      </div>
+    </div>
+
+    <h2>📍 Nous trouver</h2>
+    <p><strong>SalsaSpot</strong></p>
+    <p>Nancy, Grand Est, France</p>
+    <p>Email : contact@salsaspot.fr</p>
+
+    <div style="margin-top: 3rem; padding: 1.5rem; background: rgba(255, 107, 53, 0.1); border-radius: 1rem; text-align: center;">
+      <p style="font-size: 1.125rem; font-weight: 600; color: var(--primary); margin-bottom: 0.5rem;">
+        💃 Rejoins la communauté latino ! 🕺
+      </p>
+      <p style="color: var(--text-secondary); margin: 0;">
+        Suis-nous sur les réseaux sociaux pour ne rien rater des soirées près de chez toi.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
