@@ -19,4 +19,9 @@ class PagesController < ApplicationController
   def contact
     render layout: false
   end
+
+  def about
+  render layout: false
+  end
+
 end

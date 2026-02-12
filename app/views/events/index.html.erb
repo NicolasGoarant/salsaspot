@@ -94,30 +94,54 @@
       box-shadow: 0 6px 20px var(--primary-glow);
     }
 
-    .discover-link {
-      background: rgba(255, 107, 53, 0.1); /* Orange très léger */
-      color: var(--primary);
-      border: 1px solid rgba(255, 107, 53, 0.3);
+    .about-link {
+      background: rgba(46, 125, 50, 0.1);
+      color: #2e7d32;
+      border: 1px solid rgba(46, 125, 50, 0.3);
       padding: 0.625rem 1.25rem;
       border-radius: 2rem;
       text-decoration: none;
       font-weight: 600;
       font-size: 0.9375rem;
       transition: all 0.3s;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .about-link:hover {
+      background: #2e7d32;
+      color: white;
+      border-color: #2e7d32;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+    }
+
+    .discover-link {
+      background: white;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+      padding: 0.625rem 1.25rem;
+      border-radius: 2rem;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
     }
 
     .discover-link:hover {
       background: var(--primary);
       color: white;
-      border-color: var(--primary);
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
     }
 
     .navbar-actions {
       display: flex;
-      gap: 1rem;
+      gap: 0.75rem;
       align-items: center;
     }
 
@@ -912,6 +936,9 @@
 
       <!-- Menu desktop -->
       <div class="navbar-actions">
+        <%= link_to about_path, class: "about-link" do %>
+          💃 À propos
+        <% end %>
         <%= link_to discover_path, class: "discover-link" do %>
           ✨ Découvrir les danses
         <% end %>
@@ -931,6 +958,10 @@
     <!-- Menu mobile déroulant -->
     <div class="mobile-menu" id="mobile-menu">
       <div class="mobile-menu-content">
+        <%= link_to about_path, class: "mobile-menu-link" do %>
+          <span style="font-size: 1.5rem;">ℹ️</span>
+          <span>À propos</span>
+        <% end %>
         <%= link_to discover_path, class: "mobile-menu-link" do %>
           <span style="font-size: 1.5rem;">✨</span>
           <span>Découvrir les danses</span>

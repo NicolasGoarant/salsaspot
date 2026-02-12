@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   get 'politique-de-confidentialite', to: 'pages#politique', as: 'politique'
   get 'cgu', to: 'pages#cgu', as: 'cgu'
   get 'contact', to: 'pages#contact', as: 'contact'
+  get 'about', to: 'pages#about', as: 'about'
 
   # Admin (optionnel pour plus tard)
   namespace :admin do
