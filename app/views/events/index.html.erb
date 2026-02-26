@@ -805,7 +805,10 @@
       }
 
       .tagline {
-        display: none;
+        display: block;
+        font-size: 0.7rem;
+        max-width: 180px;
+        line-height: 1.2;
       }
 
       /* Masquer les actions desktop, afficher burger */
@@ -931,7 +934,7 @@
     <nav class="navbar">
       <%= link_to events_path, class: "navbar-brand" do %>
         <div class="logo">SalsaSpot</div>
-        <span class="tagline">🎵 Trouve ta soirée latino</span>
+        <span class="tagline">La plateforme des soirées salsa, bachata, kizomba</span>
       <% end %>
 
       <!-- Menu desktop -->
