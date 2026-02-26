@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  layout false, only: [:index]
+  layout false, only: [:index, :show]
 
   def index
     @events = Event.where(is_active: true).where("starts_at >= ?", Time.current).order(:starts_at)
@@ -11,6 +11,11 @@ class EventsController < ApplicationController
 
   def show
     @event = Event.friendly.find(params[:id])
+    @similar_events = Event.where(city: @event.city)
+                          .where.not(id: @event.id)
+                          .where(is_active: true)
+                          .where("starts_at >= ?", Time.current)
+                          .limit(3)
   end
 
   def new

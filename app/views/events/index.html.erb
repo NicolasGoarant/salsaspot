@@ -959,10 +959,14 @@
         <%= link_to discover_path, class: "discover-link" do %>
           ✨ Découvrir les danses
         <% end %>
+        <%= link_to contact_path, class: "about-link" do %>
+          📧 Contact
+        <% end %>
         <%= link_to new_event_path, class: "navbar-cta" do %>
           ➕ Ajouter une soirée
         <% end %>
       </div>
+
 
       <!-- Burger mobile -->
       <button class="burger-menu" id="burger-btn">
@@ -971,6 +975,7 @@
         <span></span>
       </button>
     </nav>
+
 
     <!-- Menu mobile déroulant -->
     <div class="mobile-menu" id="mobile-menu">
@@ -982,6 +987,10 @@
         <%= link_to discover_path, class: "mobile-menu-link" do %>
           <span style="font-size: 1.5rem;">✨</span>
           <span>Découvrir les danses</span>
+        <% end %>
+        <%= link_to contact_path, class: "mobile-menu-link" do %>
+          <span style="font-size: 1.5rem;">📧</span>
+          <span>Contact</span>
         <% end %>
         <%= link_to new_event_path, class: "mobile-menu-link primary" do %>
           <span style="font-size: 1.5rem;">➕</span>
@@ -1075,7 +1084,7 @@
                   </span>
                   <span class="event-meta-item">
                     <%= event.level == 'tous' ? '⚪️' : event.level == 'debutant' ? '🟢' : event.level == 'intermediaire' ? '🟡' : '🔴' %>
-                    <%= event.level.capitalize %>
+                    <%= event.level&.capitalize || 'Tous niveaux' %>
                   </span>
                 </div>
 

@@ -16,6 +16,7 @@
       --primary: #ff6b35;
       --primary-dark: #e85a2a;
       --success: #2e7d32;
+      --warning: #f57c00;
       --danger: #d32f2f;
       --bg-light: #f5f5f5;
       --bg-card: #ffffff;
@@ -114,6 +115,49 @@
       color: var(--text-secondary);
     }
 
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      background: var(--bg-card);
+      padding: 0.5rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--border);
+      width: fit-content;
+    }
+
+    .tab {
+      padding: 0.5rem 1.25rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .tab:hover {
+      background: var(--bg-light);
+      color: var(--text-primary);
+    }
+
+    .tab.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .tab .count {
+      background: rgba(255,255,255,0.2);
+      padding: 0.125rem 0.5rem;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      margin-left: 0.5rem;
+    }
+
+    .tab:not(.active) .count {
+      background: var(--bg-light);
+    }
+
     .flash {
       padding: 1rem;
       border-radius: 0.5rem;
@@ -159,6 +203,8 @@
 
     tr:last-child td { border-bottom: none; }
     tr:hover { background: #fafafa; }
+    tr.draft { background: #fff8e1; }
+    tr.draft:hover { background: #fff3cd; }
 
     .event-title {
       font-weight: 600;
@@ -184,9 +230,10 @@
     .badge-bachata { background: rgba(233, 30, 99, 0.1); color: #e91e63; }
     .badge-kizomba { background: rgba(156, 39, 176, 0.1); color: #9c27b0; }
     .badge-active { background: rgba(46, 125, 50, 0.1); color: var(--success); }
+    .badge-draft { background: rgba(245, 124, 0, 0.1); color: var(--warning); }
     .badge-inactive { background: rgba(211, 47, 47, 0.1); color: var(--danger); }
 
-    .actions { display: flex; gap: 0.5rem; }
+    .actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 
     .btn {
       display: inline-flex;
@@ -205,6 +252,10 @@
     .btn-sm { padding: 0.375rem 0.75rem; font-size: 0.8125rem; }
     .btn-primary { background: var(--primary); color: white; }
     .btn-primary:hover { background: var(--primary-dark); }
+    .btn-success { background: var(--success); color: white; }
+    .btn-success:hover { background: #1b5e20; }
+    .btn-warning { background: var(--warning); color: white; }
+    .btn-warning:hover { background: #e65100; }
     .btn-secondary { background: var(--bg-light); color: var(--text-primary); border: 1px solid var(--border); }
     .btn-secondary:hover { background: var(--border); }
     .btn-danger { background: var(--danger); color: white; }
@@ -251,14 +302,29 @@
           </div>
           <div class="stat-card">
             <div class="number"><%= @events.where(is_active: true).count %></div>
-            <div class="label">Actifs</div>
+            <div class="label">En ligne</div>
           </div>
           <div class="stat-card">
-            <div class="number"><%= @events.where("starts_at >= ?", Time.current).count %></div>
-            <div class="label">À venir</div>
+            <div class="number"><%= @events.where(is_active: false).count %></div>
+            <div class="label">Brouillons</div>
           </div>
         </div>
       </div>
+    </div>
+
+    <div class="tabs">
+      <%= link_to admin_events_path, class: "tab #{params[:filter].blank? ? 'active' : ''}" do %>
+        Tous <span class="count"><%= @events.count %></span>
+      <% end %>
+      <%= link_to admin_events_path(filter: 'active'), class: "tab #{params[:filter] == 'active' ? 'active' : ''}" do %>
+        ✓ En ligne <span class="count"><%= @events.where(is_active: true).count %></span>
+      <% end %>
+      <%= link_to admin_events_path(filter: 'draft'), class: "tab #{params[:filter] == 'draft' ? 'active' : ''}" do %>
+        📝 Brouillons <span class="count"><%= @events.where(is_active: false).count %></span>
+      <% end %>
+      <%= link_to admin_events_path(filter: 'upcoming'), class: "tab #{params[:filter] == 'upcoming' ? 'active' : ''}" do %>
+        📅 À venir <span class="count"><%= @events.where("starts_at >= ?", Time.current).count %></span>
+      <% end %>
     </div>
 
     <% if notice %>
@@ -266,7 +332,19 @@
     <% end %>
 
     <div class="table-container">
-      <% if @events.any? %>
+      <%
+        filtered_events = case params[:filter]
+        when 'active'
+          @events.where(is_active: true)
+        when 'draft'
+          @events.where(is_active: false)
+        when 'upcoming'
+          @events.where("starts_at >= ?", Time.current)
+        else
+          @events
+        end
+      %>
+      <% if filtered_events.any? %>
         <table>
           <thead>
             <tr>
@@ -279,8 +357,8 @@
             </tr>
           </thead>
           <tbody>
-            <% @events.each do |event| %>
-              <tr>
+            <% filtered_events.each do |event| %>
+              <tr class="<%= event.is_active ? '' : 'draft' %>">
                 <td>
                   <div class="event-title"><%= event.title %></div>
                   <div class="event-city">📍 <%= event.city %></div>
@@ -306,16 +384,20 @@
                 </td>
                 <td>
                   <% if event.is_active %>
-                    <span class="badge badge-active">✓ Actif</span>
+                    <span class="badge badge-active">✓ En ligne</span>
                   <% else %>
-                    <span class="badge badge-inactive">✗ Inactif</span>
+                    <span class="badge badge-draft">📝 Brouillon</span>
                   <% end %>
                 </td>
                 <td>
                   <div class="actions">
-                    <%= link_to "Voir", admin_event_path(event), class: "btn btn-sm btn-secondary" %>
-                    <%= link_to "Modifier", edit_admin_event_path(event), class: "btn btn-sm btn-primary" %>
-                    <%= button_to "Supprimer", admin_event_path(event), method: :delete, class: "btn btn-sm btn-danger", data: { turbo_confirm: "Êtes-vous sûr ?" } %>
+                    <% if event.is_active %>
+                      <%= button_to "Dépublier", toggle_admin_event_path(event), method: :patch, class: "btn btn-sm btn-warning" %>
+                    <% else %>
+                      <%= button_to "✓ Publier", toggle_admin_event_path(event), method: :patch, class: "btn btn-sm btn-success" %>
+                    <% end %>
+                    <%= link_to "Modifier", edit_admin_event_path(event), class: "btn btn-sm btn-secondary" %>
+                    <%= button_to "🗑️", admin_event_path(event), method: :delete, class: "btn btn-sm btn-danger", data: { turbo_confirm: "Supprimer cet événement ?" } %>
                   </div>
                 </td>
               </tr>
@@ -325,7 +407,7 @@
       <% else %>
         <div class="empty-state">
           <h3>Aucun événement</h3>
-          <p>Il n'y a pas encore d'événements.</p>
+          <p>Il n'y a pas d'événements dans cette catégorie.</p>
         </div>
       <% end %>
     </div>

@@ -20,6 +20,10 @@ Rails.application.routes.draw do
 
   # Admin (optionnel pour plus tard)
   namespace :admin do
-    resources :events
+    resources :events do
+      member do
+        patch :toggle
+      end
+    end
   end
 end

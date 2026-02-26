@@ -15,8 +15,9 @@ class Admin::EventsController < ApplicationController
 
   def create
     @event = Event.new(event_params)
+    @event.is_active = false # Brouillon par défaut
     if @event.save
-      redirect_to admin_events_path, notice: "Événement créé !"
+      redirect_to admin_events_path, notice: "Événement créé en brouillon !"
     else
       render :new, status: :unprocessable_entity
     end
@@ -41,14 +42,23 @@ class Admin::EventsController < ApplicationController
     redirect_to admin_events_path, notice: "Événement supprimé !"
   end
 
+  # Action pour activer/désactiver un événement
+  def toggle
+    @event = Event.friendly.find(params[:id])
+    @event.update(is_active: !@event.is_active)
+
+    status = @event.is_active ? "publié" : "mis en brouillon"
+    redirect_to admin_events_path(filter: params[:filter]), notice: "\"#{@event.title}\" #{status} !"
+  end
+
   private
 
   def event_params
     params.require(:event).permit(
       :title, :description, :venue_name, :address, :city,
-      :starts_at, :price, :event_url, :is_active, :has_class,
-      :class_start_time, :class_end_time, :latitude, :longitude,
-      :level, :photo_url, dance_styles: []
+      :starts_at, :price, :facebook_url, :is_active, :has_lessons,
+      :lessons_time, :latitude, :longitude,
+      :level, :organizer_name, :is_free, dance_styles: []
     )
   end
 end

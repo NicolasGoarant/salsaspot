@@ -1,4 +1,4 @@
-<%# app/views/events/show.html.erb - VERSION CLAIRE %>
+<%# app/views/events/show.html.erb - VERSION CORRIGÉE %>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -6,6 +6,7 @@
   <title><%= @event.title %> - SalsaSpot</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,6 +28,11 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      overflow-x: hidden;
+    }
 
     body {
       font-family: 'DM Sans', sans-serif;
@@ -59,6 +65,7 @@
       background: linear-gradient(135deg, var(--primary), var(--secondary));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .back-link {
@@ -77,6 +84,8 @@
       max-width: 1200px;
       margin: 0 auto;
       padding: 2rem;
+      width: 100%;
+      overflow-x: hidden;
     }
 
     /* EVENT HEADER */
@@ -87,6 +96,8 @@
       margin-bottom: 2rem;
       box-shadow: 0 4px 16px var(--shadow);
       border-top: 4px solid var(--primary);
+      width: 100%;
+      overflow: hidden;
     }
 
     .event-photo-container {
@@ -112,6 +123,8 @@
       margin-bottom: 1.5rem;
       color: var(--text-primary);
       letter-spacing: 0.02em;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
 
     .event-meta {
@@ -159,20 +172,7 @@
       grid-template-columns: 2fr 1fr;
       gap: 2rem;
       margin-bottom: 2rem;
-    }
-
-    @media (max-width: 960px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .event-photo-container {
-        max-height: 250px; /* Plus petite sur mobile */
-      }
-
-      .event-photo {
-        max-height: 250px;
-      }
+      width: 100%;
     }
 
     /* SECTION */
@@ -182,6 +182,8 @@
       padding: 2rem;
       box-shadow: 0 4px 16px var(--shadow);
       margin-bottom: 2rem;
+      width: 100%;
+      overflow: hidden;
     }
 
     .section h2 {
@@ -194,6 +196,8 @@
     .section p {
       line-height: 1.6;
       color: var(--text-secondary);
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
 
     .info-list {
@@ -215,12 +219,14 @@
 
     .info-list strong {
       color: var(--text-primary);
-      min-width: 120px;
+      min-width: 100px;
+      flex-shrink: 0;
     }
 
     .info-list a {
       color: var(--primary);
       text-decoration: none;
+      word-break: break-all;
     }
 
     .info-list a:hover {
@@ -231,7 +237,7 @@
     #map {
       height: 300px;
       border-radius: 1rem;
-      margin-bottom: 1rem;
+      margin-top: 1.5rem;
     }
 
     /* SIMILAR EVENTS */
@@ -295,6 +301,69 @@
       transform: translateY(-2px);
       box-shadow: 0 6px 20px var(--primary-glow);
     }
+
+    /* RESPONSIVE */
+    @media (max-width: 960px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .event-photo-container {
+        max-height: 250px;
+      }
+
+      .event-photo {
+        max-height: 250px;
+      }
+
+      .container {
+        padding: 1rem;
+      }
+
+      .event-header {
+        padding: 1.5rem;
+      }
+
+      .event-title {
+        font-size: 1.75rem;
+      }
+
+      .event-meta {
+        gap: 1rem;
+        font-size: 0.9rem;
+      }
+
+      .section {
+        padding: 1.25rem;
+      }
+
+      .section h2 {
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+      }
+
+      .navbar {
+        padding: 1rem;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+      }
+
+      #map {
+        height: 250px;
+      }
+
+      .info-list li {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+      }
+
+      .info-list strong {
+        min-width: auto;
+      }
+    }
   </style>
 </head>
 <body>
@@ -310,9 +379,9 @@
     <!-- EVENT HEADER -->
     <div class="event-header">
       <%# Photo de l'événement %>
-      <% if @event.photos.attached? %>
+      <% if @event.respond_to?(:photos) && @event.photos.attached? %>
         <div class="event-photo-container">
-          <img src="<%= @event.photo_url %>" alt="<%= @event.title %>" class="event-photo">
+          <%= image_tag @event.photos.first, alt: @event.title, class: "event-photo" %>
         </div>
       <% end %>
 
@@ -320,26 +389,32 @@
 
       <div class="event-meta">
         <span class="event-meta-item">
-          📅 <%= l(@event.starts_at, format: :long) %>
+          📅 <%= @event.starts_at.strftime("%d/%m/%Y à %Hh%M") %>
         </span>
         <span class="event-meta-item">
           📍 <%= @event.venue_name %>, <%= @event.city %>
         </span>
         <span class="event-meta-item">
-          💰 <%= @event.price_display %>
+          <% if @event.is_free || (@event.price && @event.price == 0) %>
+            💚 Gratuit
+          <% elsif @event.price %>
+            💰 <%= @event.price %>€
+          <% end %>
         </span>
-        <span class="event-meta-item">
-          <%= @event.level == 'tous' ? '⚪️' : @event.level == 'debutant' ? '🟢' : @event.level == 'intermediaire' ? '🟡' : '🔴' %>
-          <%= @event.level.capitalize %>
-        </span>
+        <% if @event.level.present? %>
+          <span class="event-meta-item">
+            <%= @event.level == 'tous' ? '⚪️' : @event.level == 'debutant' ? '🟢' : @event.level == 'intermediaire' ? '🟡' : '🔴' %>
+            <%= @event.level&.capitalize %>
+          </span>
+        <% end %>
       </div>
 
       <div class="event-badges">
-        <% @event.dance_styles.each do |style| %>
+        <% @event.dance_styles&.each do |style| %>
           <span class="badge badge-style"><%= style.capitalize %></span>
         <% end %>
         <% if @event.has_lessons %>
-          <span class="badge badge-lessons">📚 Cours inclus à <%= @event.lessons_time %></span>
+          <span class="badge badge-lessons">📚 Cours inclus<%= @event.lessons_time.present? ? " à #{@event.lessons_time}" : "" %></span>
         <% end %>
       </div>
     </div>
@@ -351,17 +426,21 @@
         <% if @event.description.present? %>
           <div class="section">
             <h2>📝 Description</h2>
-            <p><%= simple_format(@event.description) %></p>
+            <%= simple_format(@event.description) %>
           </div>
         <% end %>
 
         <div class="section">
           <h2>📍 Lieu</h2>
           <p><strong><%= @event.venue_name %></strong></p>
-          <p><%= @event.address %></p>
-          <p><%= @event.postal_code %> <%= @event.city %></p>
+          <% if @event.address.present? %>
+            <p><%= @event.address %></p>
+          <% end %>
+          <p><%= [@event.postal_code, @event.city].compact.join(' ') %></p>
 
-          <div id="map" style="margin-top: 1.5rem;"></div>
+          <% if @event.latitude.present? && @event.longitude.present? %>
+            <div id="map"></div>
+          <% end %>
         </div>
       </div>
 
@@ -380,7 +459,7 @@
             <% if @event.phone.present? %>
               <li>
                 <strong>Téléphone :</strong>
-                <%= @event.phone %>
+                <%= link_to @event.phone, "tel:#{@event.phone.gsub(' ', '')}" %>
               </li>
             <% end %>
 
@@ -401,7 +480,7 @@
             <% if @event.facebook_url.present? %>
               <li>
                 <strong>Facebook :</strong>
-                <%= link_to "Voir la page", @event.facebook_url, target: "_blank" %>
+                <%= link_to "Voir l'événement", @event.facebook_url, target: "_blank" %>
               </li>
             <% end %>
           </ul>
@@ -414,7 +493,7 @@
     </div>
 
     <!-- SIMILAR EVENTS -->
-    <% if @similar_events.any? %>
+    <% if @similar_events&.any? %>
       <div class="section">
         <h2>🔥 Autres soirées à <%= @event.city %></h2>
         <div class="similar-events">
@@ -422,10 +501,16 @@
             <%= link_to event_path(similar), class: "similar-card" do %>
               <h3><%= similar.title %></h3>
               <p>
-                📅 <%= l(similar.starts_at, format: :short) %> •
-                <%= similar.dance_styles.join(', ').capitalize %>
+                📅 <%= similar.starts_at.strftime("%d/%m à %Hh%M") %> •
+                <%= similar.dance_styles&.map(&:capitalize)&.join(', ') %>
               </p>
-              <p class="similar-price"><%= similar.price_display %></p>
+              <span class="similar-price">
+                <% if similar.is_free || (similar.price && similar.price == 0) %>
+                  Gratuit
+                <% elsif similar.price %>
+                  <%= similar.price %>€
+                <% end %>
+              </span>
             <% end %>
           <% end %>
         </div>
@@ -433,23 +518,44 @@
     <% end %>
   </div>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <script>
-    <% if @event.latitude && @event.longitude %>
-      const map = L.map('map').setView([<%= @event.latitude %>, <%= @event.longitude %>], 15);
+<script>
+  <% if @event.latitude.present? && @event.longitude.present? %>
+    const map = L.map('map').setView([<%= @event.latitude %>, <%= @event.longitude %>], 15);
 
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-        attribution: '© OpenStreetMap, © CartoDB'
-      }).addTo(map);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      attribution: '© OpenStreetMap, © CartoDB'
+    }).addTo(map);
 
-      const icon = L.divIcon({
-        html: '<div style="background: #ff6b35; color: white; padding: 8px 14px; border-radius: 20px; font-weight: 700; font-size: 13px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border: 2px solid rgba(255,255,255,0.9);"><%= @event.venue_name || @event.city %></div>',
-        className: ''
-      });
+    // Couleur selon gratuit ou payant
+    <% marker_color = (@event.is_free || (@event.price && @event.price == 0)) ? '#4CAF50' : '#ff6b35' %>
+    const color = '<%= marker_color %>';
 
-      L.marker([<%= @event.latitude %>, <%= @event.longitude %>], { icon }).addTo(map);
-    <% end %>
-  </script>
+    // Emoji selon le style de danse
+    <%
+      styles = @event.dance_styles || []
+      emoji = if styles.include?('salsa')
+        '💃'
+      elsif styles.include?('bachata')
+        '🕺'
+      elsif styles.include?('kizomba')
+        '❤️'
+      else
+        '🎵'
+      end
+    %>
+    const emoji = '<%= emoji %>';
+
+    const icon = L.divIcon({
+      html: '<div style="background: ' + color + '; color: white; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.25); border: 3px solid white;">' + emoji + '</div>',
+      className: '',
+      iconSize: [50, 50],
+      iconAnchor: [25, 50]
+    });
+
+    L.marker([<%= @event.latitude %>, <%= @event.longitude %>], { icon }).addTo(map);
+  <% end %>
+</script>
 </body>
 </html>
