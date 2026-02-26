@@ -75,6 +75,10 @@
       font-size: 1,5rem;
     }
 
+    .tagline br {
+      display: none;
+    }
+
     .navbar-cta {
       display: inline-flex;
       align-items: center;
@@ -817,6 +821,10 @@
         font-size: 1.4rem;
       }
 
+      .tagline br {
+        display: block;
+      }
+
       /* Masquer les actions desktop, afficher burger */
       .navbar-actions {
         display: none;
@@ -940,7 +948,7 @@
     <nav class="navbar">
       <%= link_to events_path, class: "navbar-brand" do %>
         <div class="logo">SalsaSpot</div>
-        <span class="tagline">La plateforme des soirées salsa, bachata, kizomba</span>
+        <span class="tagline">La plateforme des soirées<br> salsa, bachata, kizomba</span>
       <% end %>
 
       <!-- Menu desktop -->
