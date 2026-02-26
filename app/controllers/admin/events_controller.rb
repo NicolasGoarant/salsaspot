@@ -1,4 +1,3 @@
-# app/controllers/admin/events_controller.rb
 class Admin::EventsController < ApplicationController
   layout false
 
@@ -8,6 +7,19 @@ class Admin::EventsController < ApplicationController
 
   def show
     @event = Event.find(params[:id])
+  end
+
+  def new
+    @event = Event.new
+  end
+
+  def create
+    @event = Event.new(event_params)
+    if @event.save
+      redirect_to admin_events_path, notice: "Événement créé !"
+    else
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def edit
@@ -36,7 +48,7 @@ class Admin::EventsController < ApplicationController
       :title, :description, :venue_name, :address, :city,
       :starts_at, :price, :event_url, :is_active, :has_class,
       :class_start_time, :class_end_time, :latitude, :longitude,
-      :level, dance_styles: []
+      :level, :photo_url, dance_styles: []
     )
   end
 end
