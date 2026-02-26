@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Modifier événement</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Righteous&display=swap" rel="stylesheet">
+  <style>
+    :root { --primary: #ff6b35; --primary-dark: #e85a2a; --danger: #d32f2f; --bg-light: #f5f5f5; --bg-card: #fff; --text-primary: #1a1a1a; --text-secondary: #666; --border: #e0e0e0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Poppins', sans-serif; background: var(--bg-light); color: var(--text-primary); line-height: 1.6; }
+    .navbar { background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 1rem 2rem; }
+    .logo { font-family: 'Righteous', sans-serif; font-size: 1.5rem; color: var(--primary); text-decoration: none; }
+    .logo span { background: var(--danger); color: white; font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 4px; margin-left: 0.5rem; }
+    .container { max-width: 800px; margin: 0 auto; padding: 2rem; }
+    .back-link { color: var(--text-secondary); text-decoration: none; margin-bottom: 1.5rem; display: inline-block; }
+    .back-link:hover { color: var(--primary); }
+    .card { background: var(--bg-card); border-radius: 1rem; border: 1px solid var(--border); padding: 2rem; }
+    .card h1 { font-size: 1.5rem; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.875rem; }
+    input[type="text"], input[type="number"], input[type="url"], input[type="datetime-local"], select, textarea {
+      width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 0.5rem; font-size: 1rem; font-family: inherit;
+    }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1); }
+    textarea { resize: vertical; min-height: 120px; }
+    .checkbox-group { display: flex; flex-wrap: wrap; gap: 1rem; }
+    .checkbox-item { display: flex; align-items: center; gap: 0.5rem; }
+    .checkbox-item input[type="checkbox"] { width: 1.25rem; height: 1.25rem; accent-color: var(--primary); }
+    .form-actions { display: flex; gap: 1rem; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+    .btn { padding: 0.875rem 1.5rem; border-radius: 0.5rem; font-size: 1rem; font-weight: 600; text-decoration: none; border: none; cursor: pointer; }
+    .btn-primary { background: var(--primary); color: white; flex: 1; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-secondary { background: var(--bg-light); color: var(--text-primary); border: 1px solid var(--border); }
+    @media (max-width: 768px) { .form-row { grid-template-columns: 1fr; } .form-actions { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <%= link_to root_path, class: "logo" do %>SalsaSpot <span>Admin</span><% end %>
+  </nav>
+  <div class="container">
+    <%= link_to "← Retour à la liste", admin_events_path, class: "back-link" %>
+    <div class="card">
+      <h1>✏️ Modifier l'événement</h1>
+      <%= form_with model: @event, url: admin_event_path(@event), method: :patch, local: true do |f| %>
+        <div class="form-group">
+          <%= f.label :title, "Titre" %>
+          <%= f.text_field :title, required: true %>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <%= f.label :venue_name, "Lieu" %>
+            <%= f.text_field :venue_name, required: true %>
+          </div>
+          <div class="form-group">
+            <%= f.label :city, "Ville" %>
+            <%= f.text_field :city, required: true %>
+          </div>
+        </div>
+        <div class="form-group">
+          <%= f.label :address, "Adresse" %>
+          <%= f.text_field :address %>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <%= f.label :starts_at, "Date et heure" %>
+            <%= f.datetime_local_field :starts_at, required: true %>
+          </div>
+          <div class="form-group">
+            <%= f.label :price, "Prix (€)" %>
+            <%= f.number_field :price, step: 0.5, min: 0 %>
+          </div>
+        </div>
+        <div class="form-group">
+          <%= f.label :description, "Description" %>
+          <%= f.text_area :description %>
+        </div>
+        <div class="form-group">
+          <%= f.label :event_url, "Lien de l'événement" %>
+          <%= f.url_field :event_url, placeholder: "https://..." %>
+        </div>
+        <div class="form-group">
+          <label>Styles de danse</label>
+          <div class="checkbox-group">
+            <% ['salsa', 'bachata', 'kizomba'].each do |style| %>
+              <label class="checkbox-item">
+                <%= check_box_tag "event[dance_styles][]", style, @event.dance_styles&.include?(style) %>
+                <%= style.capitalize %>
+              </label>
+            <% end %>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Cours inclus ?</label>
+            <label class="checkbox-item"><%= f.check_box :has_class %> Oui</label>
+          </div>
+          <div class="form-group">
+            <label>Actif ?</label>
+            <label class="checkbox-item"><%= f.check_box :is_active %> Visible sur le site</label>
+          </div>
+        </div>
+        <div class="form-actions">
+          <%= link_to "Annuler", admin_events_path, class: "btn btn-secondary" %>
+          <%= f.submit "💾 Enregistrer", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</body>
+</html>
