@@ -1,7 +1,8 @@
 class EventsController < ApplicationController
+  layout false, only: [:index]
+
   def index
     @events = Event.where(is_active: true).where("starts_at >= ?", Time.current).order(:starts_at)
-
     respond_to do |format|
       format.html
       format.json { render json: @events }
@@ -9,7 +10,7 @@ class EventsController < ApplicationController
   end
 
   def show
-    @event = Event.find(params[:id])
+    @event = Event.friendly.find(params[:id])
   end
 
   def new
@@ -18,8 +19,7 @@ class EventsController < ApplicationController
 
   def create
     @event = Event.new(event_params)
-    @event.is_active = false # En attente de validation
-
+    @event.is_active = false
     if @event.save
       redirect_to merci_events_path
     else
