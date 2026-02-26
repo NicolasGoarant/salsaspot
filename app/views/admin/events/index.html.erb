@@ -242,18 +242,21 @@
   <div class="container">
     <div class="header">
       <h1>📋 Gestion des événements</h1>
-      <div class="stats">
-        <div class="stat-card">
-          <div class="number"><%= @events.count %></div>
-          <div class="label">Total</div>
-        </div>
-        <div class="stat-card">
-          <div class="number"><%= @events.where(is_active: true).count %></div>
-          <div class="label">Actifs</div>
-        </div>
-        <div class="stat-card">
-          <div class="number"><%= @events.where("starts_at >= ?", Time.current).count %></div>
-          <div class="label">À venir</div>
+      <div style="display: flex; gap: 1rem; align-items: center;">
+        <%= link_to "➕ Nouvel événement", new_admin_event_path, class: "btn btn-primary" %>
+        <div class="stats">
+          <div class="stat-card">
+            <div class="number"><%= @events.count %></div>
+            <div class="label">Total</div>
+          </div>
+          <div class="stat-card">
+            <div class="number"><%= @events.where(is_active: true).count %></div>
+            <div class="label">Actifs</div>
+          </div>
+          <div class="stat-card">
+            <div class="number"><%= @events.where("starts_at >= ?", Time.current).count %></div>
+            <div class="label">À venir</div>
+          </div>
         </div>
       </div>
     </div>
