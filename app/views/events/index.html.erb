@@ -1076,10 +1076,10 @@
 
                 <div class="event-meta">
                   <span class="event-meta-item">
-                    📅 <%= l(event.starts_at, format: :short) %>
+                    📅 <%= l(event.starts_at, format: "%A %d %B %Y, %Hh") %>
                   </span>
                   <span class="event-meta-item">
-                    📍 <%= event.venue_name %>, <%= event.city %>
+                    📍 <%= event.venue_name %>, <%= event.address %>, <%= event.city %>
                   </span>
                   <span class="event-meta-item">
                     <%= event.level == 'tous' ? '⚪️' : event.level == 'debutant' ? '🟢' : event.level == 'intermediaire' ? '🟡' : '🔴' %>
@@ -1204,7 +1204,7 @@
               ` : ''}
               <strong style="font-size: 1.125rem; display: block; margin-bottom: 10px; color: #1a1a1a; line-height: 1.3;">${event.title}</strong>
                 <div style="color: #666; margin-bottom: 6px; font-size: 0.9375rem;">
-                  <span style="margin-right: 8px;">📍</span>${event.venue_name || event.city}
+                 <span style="margin-right: 8px;">📍</span>${event.venue_name}${event.address ? ', ' + event.address : ''}, ${event.city}
                 </div>
                 <div style="color: #666; margin-bottom: 6px; font-size: 0.9375rem;">
                   <span style="margin-right: 8px;">📅</span>${event.date_display}
