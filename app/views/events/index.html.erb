@@ -40,7 +40,7 @@
       flex-direction: column;
     }
 
-    /* NAVBAR */
+    /* ===================== NAVBAR ===================== */
     .navbar {
       background: var(--bg-card);
       border-bottom: 1px solid var(--border);
@@ -72,7 +72,7 @@
 
     .tagline {
       color: var(--text-secondary);
-      font-size: 1,5rem;
+      font-size: 1rem;
     }
 
     .tagline br {
@@ -149,7 +149,7 @@
       align-items: center;
     }
 
-    /* BURGER MENU (caché sur desktop) */
+    /* ===================== BURGER MENU ===================== */
     .burger-menu {
       display: none;
       flex-direction: column;
@@ -180,11 +180,11 @@
       transform: rotate(-45deg) translate(6px, -6px);
     }
 
-    /* Menu mobile déroulant */
+    /* ===================== MOBILE MENU ===================== */
     .mobile-menu {
       display: none;
       position: absolute;
-      top: 100%; /* Juste en dessous de la navbar */
+      top: 100%;
       left: 0;
       right: 0;
       background: var(--bg-card);
@@ -195,14 +195,8 @@
     }
 
     @keyframes slideDown {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .mobile-menu.active {
@@ -248,28 +242,7 @@
       box-shadow: 0 4px 12px var(--primary-glow);
     }
 
-    /* Dans @media (max-width: 640px) */
-
-/* Dans la section @media (max-width: 640px) de ton index.html.erb */
-
-    .events-header {
-      padding: 1rem;
-      gap: 0.5rem; /* Réduire l'espace entre titre et badge */
-    }
-
-    .events-header h2 {
-      font-size: 1.375rem; /* Réduire la taille */
-      flex-shrink: 0; /* Empêche la compression */
-    }
-
-    .events-count {
-      font-size: 0.75rem; /* Plus petit */
-      padding: 0.25rem 0.625rem; /* Padding réduit */
-      white-space: nowrap;
-      flex-shrink: 0; /* Empêche la compression */
-    }
-
-    /* FILTRES */
+    /* ===================== FILTRES ===================== */
     .filters {
       background: var(--bg-card);
       border-bottom: 1px solid var(--border);
@@ -310,7 +283,7 @@
       box-shadow: 0 4px 12px var(--primary-glow);
     }
 
-    /* MAIN LAYOUT */
+    /* ===================== MAIN LAYOUT ===================== */
     .main-container {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -318,36 +291,13 @@
       overflow: hidden;
     }
 
-    /* CARTE */
+    /* ===================== CARTE ===================== */
     .map-section {
       position: relative;
       background: #f5f5f5;
       border-right: 1px solid var(--border);
     }
 
-    .leaflet-popup-content-wrapper {
-      max-width: 90vw;
-    }
-    .leaflet-popup-content {
-      max-width: 260px;
-      margin: 12px;
-    }
-    @media (max-width: 640px) {
-      .leaflet-popup-content {
-        max-width: 200px;
-        margin: 8px;
-      }
-      .leaflet-popup-content img,
-      .leaflet-popup-content div[style*="background-image"] {
-        height: 100px !important;
-      }
-      .leaflet-popup-content strong {
-        font-size: 0.95rem !important;
-      }
-      .leaflet-popup-content div {
-        font-size: 0.8125rem !important;
-      }
-    }
     #map {
       width: 100%;
       height: 100%;
@@ -381,7 +331,60 @@
       box-shadow: 0 6px 20px var(--shadow);
     }
 
-    /* LISTE */
+    /* ===================== LEAFLET POPUP ===================== */
+    .leaflet-popup-content-wrapper {
+      background: white !important;
+      color: #1a1a1a !important;
+      border-radius: 1rem !important;
+      padding: 0 !important;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
+      border: 1px solid #e0e0e0 !important;
+    }
+
+    .leaflet-popup-content {
+      margin: 0 !important;
+      padding: 1rem !important;
+      font-family: 'Poppins', sans-serif !important;
+      min-width: 260px;
+    }
+
+    .leaflet-popup-tip {
+      background: white !important;
+      border: 1px solid #e0e0e0 !important;
+    }
+
+    .leaflet-popup-close-button {
+      width: 26px !important;
+      height: 26px !important;
+      font-size: 0 !important;
+      background: white !important;
+      border-radius: 50% !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      top: 8px !important;
+      right: 8px !important;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: all 0.2s;
+    }
+
+    .leaflet-popup-close-button::after {
+      content: '✕';
+      font-size: 13px;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .leaflet-popup-close-button:hover {
+      background: #f5f5f5 !important;
+    }
+
+    .leaflet-popup-close-button:hover::after {
+      color: #e63946;
+    }
+
+    /* ===================== LISTE ===================== */
     .events-section {
       background: var(--bg-light);
       overflow-y: auto;
@@ -419,18 +422,18 @@
       gap: 1.5rem;
     }
 
-    /* CARTE ÉVÉNEMENT */
+    /* ===================== CARTE ÉVÉNEMENT ===================== */
     .event-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 1rem;
-      padding: 0; /* Retirer le padding pour le layout horizontal */
+      padding: 0;
       transition: all 0.3s;
       cursor: pointer;
       position: relative;
       overflow: hidden;
       box-shadow: 0 2px 8px var(--shadow);
-      display: flex; /* Layout horizontal */
+      display: flex;
       flex-direction: row;
     }
 
@@ -461,7 +464,6 @@
       box-shadow: 0 0 0 3px var(--primary-glow);
     }
 
-    /* Zone gauche - Photo + Description */
     .event-left {
       flex-shrink: 0;
       width: 280px;
@@ -507,7 +509,6 @@
       border-radius: 0 0 0 1rem;
     }
 
-    /* Contenu de la card - côté droit */
     .event-content {
       flex: 1;
       padding: 1.5rem;
@@ -574,7 +575,7 @@
     }
 
     .event-description {
-      display: none; /* Masquer sur desktop car elle est à gauche */
+      display: none;
     }
 
     .event-footer {
@@ -610,31 +611,7 @@
       box-shadow: 0 6px 20px var(--primary-glow);
     }
 
-    .leaflet-popup-content-wrapper {
-      background: white !important;
-      color: #1a1a1a !important;
-      border-radius: 1rem !important;
-      padding: 0 !important;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
-      border: 1px solid #e0e0e0 !important;
-    }
-
-    .leaflet-popup-content {
-      margin: 0 !important;
-      padding: 1rem !important;
-      font-family: 'Poppins', sans-serif !important;
-    }
-
-    .leaflet-popup-tip {
-      background: white !important;
-      border: 1px solid #e0e0e0 !important;
-    }
-
-    .leaflet-popup-close-button {
-      color: #666 !important;
-    }
-
-    /* FOOTER */
+    /* ===================== FOOTER ===================== */
     footer {
       background: var(--bg-card);
       border-top: 1px solid var(--border);
@@ -725,6 +702,7 @@
       font-size: 0.6875rem;
     }
 
+    /* ===================== RESPONSIVE 768px ===================== */
     @media (max-width: 768px) {
       footer {
         padding: 1.5rem 1rem;
@@ -773,7 +751,7 @@
       }
     }
 
-    /* RESPONSIVE */
+    /* ===================== RESPONSIVE 1024px ===================== */
     @media (max-width: 1024px) {
       html, body {
         height: auto;
@@ -799,6 +777,7 @@
       }
     }
 
+    /* ===================== RESPONSIVE 640px ===================== */
     @media (max-width: 640px) {
       .navbar {
         padding: 0.75rem 1rem;
@@ -829,7 +808,6 @@
         display: block;
       }
 
-      /* Masquer les actions desktop, afficher burger */
       .navbar-actions {
         display: none;
       }
@@ -854,13 +832,27 @@
         font-size: 0.8125rem;
       }
 
-      /* Masquer l'indicateur de scroll */
       .filters::after {
         display: none;
       }
 
       .map-section {
         height: 45vh;
+      }
+
+      /* Popup mobile */
+      .leaflet-popup-content {
+        min-width: unset;
+        max-width: 200px;
+        padding: 0.75rem !important;
+      }
+
+      .leaflet-popup-content div[style*="background-image"] {
+        height: 100px !important;
+      }
+
+      .leaflet-popup-content strong {
+        font-size: 0.95rem !important;
       }
 
       .events-section {
@@ -873,35 +865,36 @@
       }
 
       .events-header h2 {
-        font-size: 1.25rem; /* Plus petit sur mobile */
+        font-size: 1.25rem;
       }
 
       .events-count {
-        font-size: 0.6875rem; /* Encore plus petit sur mobile */
+        font-size: 0.6875rem;
         padding: 0.25rem 0.5rem;
+        white-space: nowrap;
       }
 
       .event-card {
-        flex-direction: column; /* Vertical sur mobile */
+        flex-direction: column;
         padding: 0;
       }
 
       .event-left {
-        width: 100%; /* Pleine largeur sur mobile */
+        width: 100%;
       }
 
       .event-image {
         width: 100%;
         height: 150px;
-        border-radius: 1rem 1rem 0 0; /* Coins arrondis en haut seulement */
+        border-radius: 1rem 1rem 0 0;
       }
 
       .event-description-left {
-        display: none; /* Masquer sur mobile */
+        display: none;
       }
 
       .event-description {
-        display: block; /* Afficher dans la zone droite sur mobile */
+        display: block;
         color: var(--text-secondary);
         line-height: 1.5;
         margin-bottom: 1rem;
@@ -971,7 +964,6 @@
         <% end %>
       </div>
 
-
       <!-- Burger mobile -->
       <button class="burger-menu" id="burger-btn">
         <span></span>
@@ -979,7 +971,6 @@
         <span></span>
       </button>
     </nav>
-
 
     <!-- Menu mobile déroulant -->
     <div class="mobile-menu" id="mobile-menu">
@@ -1043,7 +1034,6 @@
 
               <%# Zone gauche : Photo + Description %>
               <div class="event-left">
-
                 <%# Photo de l'événement %>
                 <% if event.photos.attached? %>
                   <div class="event-image" style="background-image: url(<%= event.photo_url %>)"></div>
@@ -1083,7 +1073,9 @@
                     📅 <%= l(event.starts_at, format: "%A %d %B %Y, %Hh") %>
                   </span>
                   <span class="event-meta-item">
-                    📍 <%= event.venue_name %>, <%= event.address %>, <%= event.city %>
+                    📍 <%= [event.venue_name, event.address, event.city].compact.reject(&:blank?).inject([]) { |acc, part|
+                      acc.any? { |a| a.downcase.include?(part.downcase) || part.downcase.include?(a.downcase) } ? acc : acc << part
+                    }.join(', ') %>
                   </span>
                   <span class="event-meta-item">
                     <%= event.level == 'tous' ? '⚪️' : event.level == 'debutant' ? '🟢' : event.level == 'intermediaire' ? '🟡' : '🔴' %>
@@ -1119,13 +1111,12 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
+  <!-- SCRIPTS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
     const map = L.map('map', { zoomControl: false }).setView([46.603354, 1.888334], 6);
 
-    // Tuiles OpenStreetMap standard (affiche en français pour la France)
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       maxZoom: 19
@@ -1142,7 +1133,6 @@
         renderMarkers(events);
       });
 
-    // Variable globale pour le filtre actif
     let activeFilter = null;
 
     function formatLocation(event) {
@@ -1167,15 +1157,12 @@
 
         const color = event.is_free ? '#4CAF50' : '#ff6b35';
 
-        // Prioriser le style filtré, sinon prendre le premier
         let emoji;
         if (activeFilter && event.dance_styles.includes(activeFilter)) {
-          // Si un filtre est actif ET l'événement contient ce style, utiliser son emoji
           emoji = activeFilter === 'salsa' ? '💃' :
                   activeFilter === 'bachata' ? '🕺' :
                   activeFilter === 'kizomba' ? '❤️' : '🎵';
         } else {
-          // Sinon, ordre de priorité par défaut
           emoji = event.dance_styles.includes('salsa') ? '💃' :
                   event.dance_styles.includes('bachata') ? '🕺' :
                   event.dance_styles.includes('kizomba') ? '❤️' : '🎵';
@@ -1221,15 +1208,15 @@
                 "></div>
               ` : ''}
               <strong style="font-size: 1.125rem; display: block; margin-bottom: 10px; color: #1a1a1a; line-height: 1.3;">${event.title}</strong>
-                <div style="color: #666; margin-bottom: 6px; font-size: 0.9375rem;">
-                 <span style="margin-right: 8px;">📍</span>${formatLocation(event)}
-                </div>
-                <div style="color: #666; margin-bottom: 6px; font-size: 0.9375rem;">
-                  <span style="margin-right: 8px;">📅</span>${event.date_display}
-                </div>
-                <div style="color: #666; margin-bottom: 14px; font-size: 0.9375rem;">
-                  <span style="margin-right: 8px;">💰</span>${event.price_display}
-                </div>
+              <div style="color: #666; margin-bottom: 6px; font-size: 0.9375rem;">
+                <span style="margin-right: 8px;">📍</span>${formatLocation(event)}
+              </div>
+              <div style="color: #666; margin-bottom: 6px; font-size: 0.9375rem;">
+                <span style="margin-right: 8px;">📅</span>${event.date_display}
+              </div>
+              <div style="color: #666; margin-bottom: 14px; font-size: 0.9375rem;">
+                <span style="margin-right: 8px;">💰</span>${event.price_display}
+              </div>
               <a href="/events/${event.slug}" style="
                 display: inline-block;
                 background: linear-gradient(135deg, #ff6b35, #f7931e);
@@ -1292,7 +1279,6 @@
         const free = chip.dataset.free;
         const lessons = chip.dataset.lessons;
 
-        // Sauvegarder le filtre actif pour les markers
         activeFilter = style || null;
 
         let filtered = allEvents;
@@ -1305,21 +1291,17 @@
       });
     });
 
-    // Interaction carte ↔ liste : Clic sur card → zoom carte
+    // Interaction carte ↔ liste
     document.querySelectorAll('.event-card').forEach(card => {
       card.addEventListener('click', (e) => {
-        // Ne pas trigger si on clique sur le lien "Voir détails"
         if (e.target.closest('.event-cta')) return;
 
         const lat = parseFloat(card.dataset.lat);
         const lng = parseFloat(card.dataset.lng);
 
         if (lat && lng) {
-          map.flyTo([lat, lng], 15, {
-            duration: 1.5
-          });
+          map.flyTo([lat, lng], 15, { duration: 1.5 });
 
-          // Highlight visuel de la card
           document.querySelectorAll('.event-card').forEach(c => c.classList.remove('highlighted'));
           card.classList.add('highlighted');
         }
@@ -1336,7 +1318,6 @@
         mobileMenu.classList.toggle('active');
       });
 
-      // Fermer le menu si on clique sur un lien
       document.querySelectorAll('.mobile-menu-link').forEach(link => {
         link.addEventListener('click', () => {
           burgerBtn.classList.remove('active');
@@ -1344,7 +1325,6 @@
         });
       });
 
-      // Fermer le menu si on clique en dehors
       document.addEventListener('click', (e) => {
         if (!burgerBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
           burgerBtn.classList.remove('active');
