@@ -1,0 +1,135 @@
+<%# app/views/admin/events/_form.html.erb %>
+<%# Partial partagé entre new et edit %>
+
+<div class="form-group">
+  <%= f.label :title, "Titre" %>
+  <%= f.text_field :title, required: true %>
+</div>
+
+<div class="form-row">
+  <div class="form-group">
+    <%= f.label :venue_name, "Lieu" %>
+    <%= f.text_field :venue_name, required: true %>
+  </div>
+  <div class="form-group">
+    <%= f.label :city, "Ville" %>
+    <%= f.text_field :city, required: true %>
+  </div>
+</div>
+
+<div class="form-group">
+  <%= f.label :address, "Adresse" %>
+  <%= f.text_field :address %>
+</div>
+
+<div class="form-row">
+  <div class="form-group">
+    <%= f.label :starts_at, "Date et heure" %>
+    <%= f.datetime_local_field :starts_at, required: true %>
+  </div>
+  <div class="form-group">
+    <%= f.label :price, "Prix (€)" %>
+    <%= f.number_field :price, step: 0.5, min: 0 %>
+  </div>
+</div>
+
+<div class="form-group">
+  <%= f.label :description, "Description" %>
+  <%= f.text_area :description %>
+</div>
+
+<div class="form-row">
+  <div class="form-group">
+    <%= f.label :website, "Site web" %>
+    <%= f.url_field :website, placeholder: "https://..." %>
+  </div>
+  <div class="form-group">
+    <%= f.label :facebook_url, "Lien Facebook" %>
+    <%= f.url_field :facebook_url, placeholder: "https://facebook.com/..." %>
+  </div>
+</div>
+
+<div class="form-group">
+  <label>Styles de danse</label>
+  <div class="checkbox-group">
+    <% ['salsa', 'bachata', 'kizomba'].each do |style| %>
+      <label class="checkbox-item">
+        <%= check_box_tag "event[dance_styles][]", style, @event.dance_styles&.include?(style) %>
+        <%= style.capitalize %>
+      </label>
+    <% end %>
+  </div>
+</div>
+
+<div class="form-row">
+  <div class="form-group">
+    <%= f.label :level, "Niveau" %>
+    <%= f.select :level, options_for_select([["Tous niveaux", "tous"], ["Débutant", "debutant"], ["Intermédiaire", "intermediaire"], ["Avancé", "avance"]], @event.level), { include_blank: "-- Sélectionner --" } %>
+  </div>
+  <div class="form-group">
+    <%= f.label :recurrence, "Récurrence" %>
+    <%= f.select :recurrence, options_for_select([["Ponctuel", "ponctuel"], ["Hebdomadaire", "hebdomadaire"], ["Mensuel", "mensuel"]], @event.recurrence), { include_blank: "-- Sélectionner --" } %>
+  </div>
+</div>
+
+<div class="form-row">
+  <div class="form-group">
+    <label>Cours inclus ?</label>
+    <label class="checkbox-item">
+      <%= f.check_box :has_lessons %> Oui
+    </label>
+  </div>
+  <div class="form-group">
+    <%= f.label :lessons_time, "Horaire du cours" %>
+    <%= f.text_field :lessons_time, placeholder: "20h-21h" %>
+  </div>
+</div>
+
+<div class="form-row">
+  <div class="form-group">
+    <label>Gratuit ?</label>
+    <label class="checkbox-item">
+      <%= f.check_box :is_free %> Entrée gratuite
+    </label>
+  </div>
+  <div class="form-group">
+    <label>Actif ?</label>
+    <label class="checkbox-item">
+      <%= f.check_box :is_active %> Visible sur le site
+    </label>
+  </div>
+</div>
+
+<div class="form-row">
+  <div class="form-group">
+    <%= f.label :organizer_name, "Nom de l'organisateur" %>
+    <%= f.text_field :organizer_name %>
+  </div>
+  <div class="form-group">
+    <%= f.label :organizer_email, "Email organisateur" %>
+    <%= f.email_field :organizer_email %>
+  </div>
+</div>
+
+<div class="form-row">
+  <div class="form-group">
+    <%= f.label :phone, "Téléphone" %>
+    <%= f.telephone_field :phone %>
+  </div>
+  <div class="form-group">
+    <%= f.label :postal_code, "Code postal" %>
+    <%= f.text_field :postal_code %>
+  </div>
+</div>
+
+<div class="form-row">
+  <div class="form-group">
+    <%= f.label :latitude, "Latitude" %>
+    <%= f.number_field :latitude, step: 0.000001 %>
+    <small style="color: var(--text-secondary); font-size: 0.8rem;">Calculée automatiquement si laissée vide</small>
+  </div>
+  <div class="form-group">
+    <%= f.label :longitude, "Longitude" %>
+    <%= f.number_field :longitude, step: 0.000001 %>
+  </div>
+</div>
