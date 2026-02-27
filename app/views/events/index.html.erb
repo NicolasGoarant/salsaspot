@@ -606,29 +606,67 @@
     }
 
     .event-cta:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px var(--primary-glow);
+    .leaflet-popup-content-wrapper {
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
     }
 
-    /* SCROLLBAR */
-    .events-section::-webkit-scrollbar {
-      width: 8px;
+    .leaflet-popup-content {
+      min-width: 280px;
+      margin: 14px;
     }
 
-    .events-section::-webkit-scrollbar-track {
-      background: var(--bg-light);
+    .leaflet-popup-tip {
+      background: white !important;
+      border: 1px solid #e0e0e0 !important;
     }
 
-    .events-section::-webkit-scrollbar-thumb {
-      background: #ddd;
-      border-radius: 4px;
+    .leaflet-popup-close-button {
+      width: 28px !important;
+      height: 28px !important;
+      font-size: 0 !important;
+      background: white !important;
+      border-radius: 50% !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      top: 8px !important;
+      right: 8px !important;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
     }
 
-    .events-section::-webkit-scrollbar-thumb:hover {
-      background: #ccc;
+    .leaflet-popup-close-button::after {
+      content: '✕';
+      font-size: 14px;
+      color: #666;
+      font-weight: 600;
     }
 
-    /* LEAFLET POPUP */
+    .leaflet-popup-close-button:hover {
+      background: #f5f5f5 !important;
+    }
+
+    .leaflet-popup-close-button:hover::after {
+      color: #e63946;
+    }
+
+    @media (max-width: 640px) {
+      .leaflet-popup-content {
+        min-width: unset;
+        max-width: 200px;
+        margin: 8px;
+      }
+      .leaflet-popup-content div[style*="background-image"] {
+        height: 100px !important;
+      }
+      .leaflet-popup-content strong {
+        font-size: 0.95rem !important;
+      }
+      .leaflet-popup-content div {
+        font-size: 0.8125rem !important;
+      }
+    }
     .leaflet-popup-content-wrapper {
       background: white !important;
       color: #1a1a1a !important;
