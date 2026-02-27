@@ -69,3 +69,5 @@ gem "cloudinary"
 gem "activestorage-cloudinary-service"
 
 gem 'roo', '~> 2.10'
+
+gem 'rails-i18n'
