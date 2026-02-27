@@ -379,16 +379,14 @@
     <!-- EVENT HEADER -->
     <div class="event-header">
      <%# Photo de l'événement %>
-      <div class="event-photo-container">
-        <% if @event.photos.attached? %>
-          <%= image_tag @event.photos.first, alt: @event.title, class: "event-photo" %>
-        <% else %>
-          <% default_style = @event.dance_styles.include?('salsa') ? 'salsa' :
-                              @event.dance_styles.include?('bachata') ? 'bachata' :
-                              @event.dance_styles.include?('kizomba') ? 'kizomba' : 'salsa' %>
-          <%= image_tag asset_path("#{default_style}.jpg"), alt: @event.title, class: "event-photo" %>
-        <% end %>
-      </div>
+      <% if @event.photos.attached? %>
+        <div class="event-photo-container" style="background-image: url(<%= @event.photo_url %>); background-size: cover; background-position: center; height: 350px;"></div>
+      <% else %>
+        <% default_style = @event.dance_styles.include?('salsa') ? 'salsa' :
+                            @event.dance_styles.include?('bachata') ? 'bachata' :
+                            @event.dance_styles.include?('kizomba') ? 'kizomba' : 'salsa' %>
+        <div class="event-photo-container" style="background-image: url(<%= asset_path("#{default_style}.jpg") %>); background-size: cover; background-position: center; height: 350px;"></div>
+      <% end %>
 
       <h1 class="event-title"><%= @event.title %></h1>
 
