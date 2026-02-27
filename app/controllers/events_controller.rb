@@ -5,7 +5,17 @@ class EventsController < ApplicationController
     @events = Event.where(is_active: true).where("starts_at >= ?", Time.current).order(:starts_at)
     respond_to do |format|
       format.html
-      format.json { render json: @events }
+      format.json do
+        render json: @events.map { |e|
+          default_style = (e.dance_styles & ['salsa', 'bachata', 'kizomba']).first || 'salsa'
+          fallback_photo = ActionController::Base.helpers.asset_path("#{default_style}.jpg")
+
+          e.as_json.merge(
+            price_display: e.price_display,
+            photo_url: e.photo_url || fallback_photo
+          )
+        }
+      end
     end
   end
 

@@ -1039,16 +1039,15 @@
 
               <%# Zone gauche : Photo + Description %>
               <div class="event-left">
+
                 <%# Photo de l'événement %>
                 <% if event.photos.attached? %>
                   <div class="event-image" style="background-image: url(<%= event.photo_url %>)"></div>
                 <% else %>
-                  <div class="event-image event-placeholder">
-                    <% emoji = event.dance_styles.include?('salsa') ? '💃' :
-                              event.dance_styles.include?('bachata') ? '🕺' :
-                              event.dance_styles.include?('kizomba') ? '❤️' : '🎵' %>
-                    <%= emoji %>
-                  </div>
+                  <% default_style = event.dance_styles.include?('salsa') ? 'salsa' :
+                                      event.dance_styles.include?('bachata') ? 'bachata' :
+                                      event.dance_styles.include?('kizomba') ? 'kizomba' : 'salsa' %>
+                  <div class="event-image" style="background-image: url(<%= asset_path("#{default_style}.jpg") %>)"></div>
                 <% end %>
 
                 <%# Description sous la photo (desktop seulement) %>
