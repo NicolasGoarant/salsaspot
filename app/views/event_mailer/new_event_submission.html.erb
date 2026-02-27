@@ -75,7 +75,7 @@
           </div>
           <div class="photo-grid">
             <% @event.photos.each do |photo| %>
-              <%= image_tag url_for(photo) %>
+              <img src="https://res.cloudinary.com/<%= Cloudinary.config.cloud_name %>/image/upload/<%= photo.blob.key %>" width="300" style="border-radius: 8px;">
             <% end %>
           </div>
         <% end %>
