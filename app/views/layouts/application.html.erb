@@ -495,9 +495,28 @@
         .site-navbar .burger-menu { display: flex; }
         .site-navbar .tagline { display: none; }
         .site-navbar { padding: 0.75rem 1rem; }
-        .site-footer .footer-content { flex-direction: column; gap: 1.5rem; }
-        .site-footer .footer-brand { max-width: 100%; }
-        .site-footer .footer-links { flex-direction: row; flex-wrap: wrap; gap: 0.75rem; }
+
+        .site-footer { padding: 2rem 1.5rem; }
+        .site-footer .footer-content {
+          flex-direction: column;
+          gap: 2rem;
+          align-items: center;
+          text-align: center;
+        }
+        .site-footer .footer-brand {
+          max-width: 100%;
+          text-align: center;
+        }
+        .site-footer .footer-section {
+          width: 100%;
+          text-align: center;
+        }
+        .site-footer .footer-links {
+          flex-direction: column;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
         .page-container { padding: 2rem 1rem; }
         .page-container h1 { font-size: 2rem; }
         .page-container .contact-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
