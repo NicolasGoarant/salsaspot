@@ -24,6 +24,11 @@ Rails.application.routes.draw do
       member do
         patch :toggle
       end
+      collection do
+        get :import
+        post :import_excel
+      end
     end
   end
+
 end

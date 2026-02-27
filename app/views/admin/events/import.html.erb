@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Import Excel - Admin SalsaSpot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Righteous&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #ff6b35;
+      --primary-dark: #e85a2a;
+      --success: #2e7d32;
+      --danger: #d32f2f;
+      --warning: #f57c00;
+      --info: #1976d2;
+      --bg-light: #f5f5f5;
+      --bg-card: #fff;
+      --text-primary: #1a1a1a;
+      --text-secondary: #666;
+      --border: #e0e0e0;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Poppins', sans-serif; background: var(--bg-light); color: var(--text-primary); line-height: 1.6; }
+
+    .navbar { background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-family: 'Righteous', sans-serif; font-size: 1.5rem; color: var(--primary); text-decoration: none; }
+    .logo span { background: var(--danger); color: white; font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 4px; margin-left: 0.5rem; }
+    .nav-links a { color: var(--text-secondary); text-decoration: none; margin-left: 1rem; }
+    .nav-links a:hover { color: var(--primary); }
+
+    .container { max-width: 700px; margin: 0 auto; padding: 2rem; }
+    .back-link { color: var(--text-secondary); text-decoration: none; margin-bottom: 1.5rem; display: inline-block; }
+    .back-link:hover { color: var(--primary); }
+
+    .card { background: var(--bg-card); border-radius: 1rem; border: 1px solid var(--border); padding: 2rem; margin-bottom: 2rem; }
+    .card h1 { font-size: 1.5rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+    .card p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+
+    .upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: 1rem;
+      padding: 3rem 2rem;
+      text-align: center;
+      transition: all 0.3s;
+      cursor: pointer;
+      background: var(--bg-light);
+    }
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: var(--primary);
+      background: rgba(255, 107, 53, 0.05);
+    }
+    .upload-zone .icon { font-size: 3rem; margin-bottom: 1rem; }
+    .upload-zone h3 { font-size: 1.125rem; margin-bottom: 0.5rem; color: var(--text-primary); }
+    .upload-zone p { font-size: 0.875rem; color: var(--text-secondary); margin: 0; }
+    .upload-zone input[type="file"] { display: none; }
+
+    .file-selected {
+      background: rgba(46, 125, 50, 0.1);
+      border-color: var(--success);
+      border-style: solid;
+    }
+    .file-selected .icon { color: var(--success); }
+    .file-name {
+      font-weight: 600;
+      color: var(--success);
+      margin-top: 0.5rem;
+      word-break: break-all;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 2rem;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+
+    .alert {
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+    }
+    .alert-danger { background: #ffebee; color: var(--danger); border: 1px solid #ffcdd2; }
+    .alert-success { background: #e8f5e9; color: var(--success); border: 1px solid #c8e6c9; }
+
+    .info-box {
+      background: rgba(25, 118, 210, 0.1);
+      border: 1px solid rgba(25, 118, 210, 0.3);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      margin-top: 1.5rem;
+    }
+    .info-box h4 { color: var(--info); font-size: 0.9375rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+    .info-box ul { margin: 0; padding-left: 1.25rem; font-size: 0.875rem; color: var(--text-secondary); }
+    .info-box li { margin-bottom: 0.25rem; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <%= link_to root_path, class: "logo" do %>SalsaSpot <span>Admin</span><% end %>
+    <div class="nav-links">
+      <%= link_to "← Retour au site", root_path %>
+    </div>
+  </nav>
+
+  <div class="container">
+    <%= link_to "← Retour à la liste", admin_events_path, class: "back-link" %>
+
+    <% if flash[:alert] %>
+      <div class="alert alert-danger"><%= flash[:alert] %></div>
+    <% end %>
+
+    <% if flash[:notice] %>
+      <div class="alert alert-success"><%= flash[:notice] %></div>
+    <% end %>
+
+    <div class="card">
+      <h1>📥 Import Excel</h1>
+      <p>Importez des événements depuis un fichier Excel au format "Danses Nancy".</p>
+
+      <%= form_with url: import_excel_admin_events_path, method: :post, multipart: true, local: true do |f| %>
+        <div class="upload-zone" id="upload-zone">
+          <div class="icon">📄</div>
+          <h3>Glissez votre fichier ici</h3>
+          <p>ou cliquez pour sélectionner un fichier .xlsx</p>
+          <%= f.file_field :file, accept: ".xlsx,.xls", id: "file-input" %>
+          <div class="file-name" id="file-name" style="display: none;"></div>
+        </div>
+
+        <%= f.submit "📥 Importer les événements", class: "btn btn-primary", id: "submit-btn", disabled: true %>
+      <% end %>
+
+      <div class="info-box">
+        <h4>ℹ️ Format attendu</h4>
+        <ul>
+          <li>Fichier Excel (.xlsx) avec une feuille "Danses NANCY"</li>
+          <li>Colonnes : Dates, Danses, Horaires, Lieu, Organisateur, Tarif, Lien, Détails</li>
+          <li>Les événements sont importés en <strong>brouillon</strong> par défaut</li>
+          <li>Les doublons (même date + même lieu) sont ignorés</li>
+          <li>Seuls les styles SBK (Salsa, Bachata, Kizomba) sont importés</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const uploadZone = document.getElementById('upload-zone');
+    const fileInput = document.getElementById('file-input');
+    const fileName = document.getElementById('file-name');
+    const submitBtn = document.getElementById('submit-btn');
+
+    // Click sur la zone
+    uploadZone.addEventListener('click', () => fileInput.click());
+
+    // Drag & drop
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone.classList.add('dragover');
+    });
+
+    uploadZone.addEventListener('dragleave', () => {
+      uploadZone.classList.remove('dragover');
+    });
+
+    uploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('dragover');
+
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        fileInput.files = files;
+        updateFileName(files[0]);
+      }
+    });
+
+    // Changement de fichier
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        updateFileName(e.target.files[0]);
+      }
+    });
+
+    function updateFileName(file) {
+      fileName.textContent = '✅ ' + file.name;
+      fileName.style.display = 'block';
+      uploadZone.classList.add('file-selected');
+      submitBtn.disabled = false;
+    }
+  </script>
+</body>
+</html>

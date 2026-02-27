@@ -295,6 +295,7 @@
       <h1>📋 Gestion des événements</h1>
       <div style="display: flex; gap: 1rem; align-items: center;">
         <%= link_to "➕ Nouvel événement", new_admin_event_path, class: "btn btn-primary" %>
+        <%= link_to "📥 Import Excel", import_admin_events_path, class: "btn btn-secondary" %>
         <div class="stats">
           <div class="stat-card">
             <div class="number"><%= @events.count %></div>
