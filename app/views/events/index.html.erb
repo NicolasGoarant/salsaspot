@@ -325,6 +325,29 @@
       border-right: 1px solid var(--border);
     }
 
+    .leaflet-popup-content-wrapper {
+      max-width: 90vw;
+    }
+    .leaflet-popup-content {
+      max-width: 260px;
+      margin: 12px;
+    }
+    @media (max-width: 640px) {
+      .leaflet-popup-content {
+        max-width: 200px;
+        margin: 8px;
+      }
+      .leaflet-popup-content img,
+      .leaflet-popup-content div[style*="background-image"] {
+        height: 100px !important;
+      }
+      .leaflet-popup-content strong {
+        font-size: 0.95rem !important;
+      }
+      .leaflet-popup-content div {
+        font-size: 0.8125rem !important;
+      }
+    }
     #map {
       width: 100%;
       height: 100%;
