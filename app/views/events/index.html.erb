@@ -281,30 +281,6 @@
       box-shadow: 0 4px 12px var(--primary-glow);
     }
 
-    /* Recherche ville */
-    .city-search {
-      padding: 0.625rem 1rem;
-      border: 1px solid var(--border);
-      border-radius: 2rem;
-      font-size: 0.875rem;
-      font-family: 'Poppins', sans-serif;
-      color: var(--text-primary);
-      background: var(--bg-elevated);
-      outline: none;
-      width: 180px;
-      transition: all 0.3s;
-    }
-
-    .city-search:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px var(--primary-glow);
-      background: white;
-    }
-
-    .city-search::placeholder {
-      color: #aaa;
-    }
-
     /* ===================== MAIN LAYOUT ===================== */
     .main-container {
       display: grid;
@@ -742,7 +718,6 @@
       .filters { padding: 1rem 0.5rem; }
       .filters-container { justify-content: center; flex-wrap: wrap; padding: 0; }
       .filter-chip { flex-shrink: 0; padding: 0.5rem 0.875rem; font-size: 0.8125rem; }
-      .city-search { width: 100%; order: -1; }
       .filters::after { display: none; }
 
       .map-section { height: 55vh; }
@@ -813,7 +788,6 @@
   <!-- FILTRES -->
   <div class="filters">
     <div class="filters-container">
-      <input type="text" class="city-search" id="city-search" placeholder="🔍 Rechercher une ville...">
       <button class="filter-chip active" data-style="">🌍 Toutes</button>
       <button class="filter-chip" data-style="salsa">💃 Salsa</button>
       <button class="filter-chip" data-style="bachata">🕺 Bachata</button>

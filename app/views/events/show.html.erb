@@ -406,7 +406,7 @@
 
       <div class="event-meta">
         <span class="event-meta-item">
-          📅 <%= l(@event.starts_at, format: "%d/%m/%Y à %Hh%M") %>
+          📅 <%= l(@event.starts_at, format: "%A %d %B %Y à %Hh%M") %>
         </span>
         <span class="event-meta-item">
           📍 <%= [@event.venue_name, @event.city].compact.reject(&:blank?).join(', ') %>
