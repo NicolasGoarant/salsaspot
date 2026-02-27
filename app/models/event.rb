@@ -22,7 +22,13 @@ class Event < ApplicationRecord
   scope :verified, -> { where(is_verified: true) }
 
   def price_display
-    is_free ? 'Gratuit' : "#{price}€"
+    if is_free || price.nil? || price == 0
+      'Gratuit'
+    elsif price % 1 == 0
+      "#{price.to_i}€"
+    else
+      "#{format('%.2f', price).gsub('.', ',')}€"
+    end
   end
 
   def photo_url
@@ -33,6 +39,15 @@ class Event < ApplicationRecord
       Cloudinary::Utils.cloudinary_url(blob.key)
     else
       Rails.application.routes.url_helpers.rails_blob_path(photos.first, only_path: true)
+    end
+  end
+
+  # URL de la photo pour les OG tags (absolue)
+  def og_photo_url
+    if photos.attached? && Rails.env.production?
+      Cloudinary::Utils.cloudinary_url(photos.first.key)
+    else
+      nil
     end
   end
 

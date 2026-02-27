@@ -1,6 +1,11 @@
 class Admin::EventsController < ApplicationController
   layout false
 
+  http_basic_authenticate_with(
+    name: ENV.fetch("ADMIN_USER", "admin"),
+    password: ENV.fetch("ADMIN_PASSWORD", "changeme")
+  )
+
   def index
     @events = Event.order(starts_at: :desc)
   end
@@ -15,7 +20,7 @@ class Admin::EventsController < ApplicationController
 
   def create
     @event = Event.new(event_params)
-    @event.is_active = false # Brouillon par défaut
+    @event.is_active = false
     if @event.save
       redirect_to admin_events_path, notice: "Événement créé en brouillon !"
     else
@@ -42,7 +47,6 @@ class Admin::EventsController < ApplicationController
     redirect_to admin_events_path, notice: "Événement supprimé !"
   end
 
-  # Action pour activer/désactiver un événement
   def toggle
     @event = Event.friendly.find(params[:id])
     @event.update(is_active: !@event.is_active)
@@ -51,32 +55,27 @@ class Admin::EventsController < ApplicationController
     redirect_to admin_events_path(filter: params[:filter]), notice: "\"#{@event.title}\" #{status} !"
   end
 
-  # Page d'import Excel
   def import
-    # Affiche le formulaire d'import
   end
 
-  # Traitement de l'import Excel
   def import_excel
     unless params[:file].present?
       redirect_to import_admin_events_path, alert: "Veuillez sélectionner un fichier Excel."
       return
     end
 
-    file = params[:file]
-
     unless file.content_type.in?(['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'])
       redirect_to import_admin_events_path, alert: "Format de fichier non supporté. Utilisez un fichier .xlsx"
       return
     end
 
+    file = params[:file]
     require 'roo'
 
     begin
       xlsx = Roo::Spreadsheet.open(file.path)
       sheet = xlsx.sheet('Danses NANCY') rescue xlsx.sheet(0)
 
-      # Mapping des styles de danse
       dance_mapping = {
         'S' => ['salsa'],
         'B' => ['bachata'],
@@ -104,12 +103,10 @@ class Admin::EventsController < ApplicationController
           details: sheet.cell(row_num, 8)
         }
 
-        # Ignorer les lignes vides ou les titres
         next if row[:date].nil? || row[:danses].nil?
         date_str = row[:date].to_s
         next if date_str.include?('hebdomadaire') || date_str.include?('Événements') || date_str.include?('Tous les')
 
-        # Parser la date
         begin
           if row[:date].is_a?(Date) || row[:date].is_a?(DateTime)
             event_date = row[:date].to_date
@@ -126,7 +123,6 @@ class Admin::EventsController < ApplicationController
           next
         end
 
-        # Parser l'heure
         horaires = row[:horaires].to_s
         start_hour = 21
         start_min = 0
@@ -137,7 +133,6 @@ class Admin::EventsController < ApplicationController
 
         starts_at = DateTime.new(event_date.year, event_date.month, event_date.day, start_hour, start_min)
 
-        # Parser les styles
         danse_code = row[:danses].to_s.strip.upcase.gsub(/[^A-Z]/, '')
         dance_styles = dance_mapping[danse_code] || []
 
@@ -148,13 +143,11 @@ class Admin::EventsController < ApplicationController
           dance_styles << 'kizomba' if danse_str.include?('kizomba')
         end
 
-        # Ignorer si pas SBK
         if dance_styles.empty?
           skipped += 1
           next
         end
 
-        # Parser le prix
         tarif_str = row[:tarif].to_s.downcase
         price = 0.0
         is_free = false
@@ -164,7 +157,6 @@ class Admin::EventsController < ApplicationController
           price = $1.gsub(',', '.').to_f
         end
 
-        # Parser le lieu
         lieu = row[:lieu].to_s.strip
         venue_name = lieu.split("\n").first || lieu
         city = 'Nancy'
@@ -183,30 +175,25 @@ class Admin::EventsController < ApplicationController
           city = 'Pulnoy'
         end
 
-        # Titre
         organisateur = row[:organisateur].to_s.strip
         styles_str = dance_styles.map(&:capitalize).join(' & ')
         title = "#{styles_str} - #{venue_name}"
         title = "#{styles_str} par #{organisateur}" if organisateur.present? && venue_name.length < 5
 
-        # URL Facebook
         facebook_url = nil
         lien = row[:lien].to_s
         if lien =~ /(https?:\/\/[^\s]+)/
           facebook_url = $1
         end
 
-        # Description
         description = row[:details].to_s.strip
         description = "Organisé par #{organisateur}. #{description}" if organisateur.present? && description.present?
         description = "Organisé par #{organisateur}." if organisateur.present? && description.blank?
 
-        # Cours inclus ?
         has_lessons = false
         full_text = "#{row[:horaires]} #{row[:details]}".downcase
         has_lessons = true if full_text.include?('cours') || full_text.include?('initiation') || full_text.include?('workshop')
 
-        # Vérifier doublon
         existing = Event.where(starts_at: starts_at.beginning_of_day..starts_at.end_of_day)
                         .where("LOWER(venue_name) LIKE ?", "%#{venue_name.downcase.first(10)}%")
                         .first
@@ -216,7 +203,6 @@ class Admin::EventsController < ApplicationController
           next
         end
 
-        # Créer l'événement
         event = Event.new(
           title: title,
           venue_name: venue_name,
@@ -228,13 +214,14 @@ class Admin::EventsController < ApplicationController
           description: description,
           facebook_url: facebook_url,
           dance_styles: dance_styles,
-          is_active: false, # Brouillon par défaut
+          is_active: false,
           has_lessons: has_lessons,
           organizer_name: organisateur.present? ? organisateur : nil
         )
 
         if event.save
           imported += 1
+          sleep(1.1) # Respect Nominatim rate limit
         else
           errors << "Ligne #{row_num}: #{event.errors.full_messages.join(', ')}"
         end

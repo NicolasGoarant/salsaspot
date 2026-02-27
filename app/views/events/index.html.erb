@@ -1,12 +1,22 @@
-<%# app/views/events/index.html.erb - VERSION CLAIRE ET CHALEUREUSE %>
+<%# app/views/events/index.html.erb %>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <title>SalsaSpot — Trouve ta soirée latino ce soir 🔥</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Découvre toutes les soirées salsa, bachata et kizomba près de chez toi. Carte interactive, événements en France.">
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
+
+  <%# ====== OPEN GRAPH ====== %>
+  <meta property="og:title" content="SalsaSpot — Soirées salsa, bachata, kizomba en France">
+  <meta property="og:description" content="Trouve ta prochaine soirée latino près de chez toi. <%= @events.size %> événements à venir !">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="<%= request.original_url %>">
+  <meta property="og:image" content="<%= "#{request.base_url}#{asset_path('salsa.jpg')}" %>">
+  <meta property="og:site_name" content="SalsaSpot">
+  <meta property="og:locale" content="fr_FR">
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,7 +39,6 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     html, body { height: 100%; overflow: hidden; }
 
     body {
@@ -75,9 +84,7 @@
       font-size: 1rem;
     }
 
-    .tagline br {
-      display: none;
-    }
+    .tagline br { display: none; }
 
     .navbar-cta {
       display: inline-flex;
@@ -168,17 +175,9 @@
       transition: all 0.3s;
     }
 
-    .burger-menu.active span:nth-child(1) {
-      transform: rotate(45deg) translate(6px, 6px);
-    }
-
-    .burger-menu.active span:nth-child(2) {
-      opacity: 0;
-    }
-
-    .burger-menu.active span:nth-child(3) {
-      transform: rotate(-45deg) translate(6px, -6px);
-    }
+    .burger-menu.active span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
+    .burger-menu.active span:nth-child(2) { opacity: 0; }
+    .burger-menu.active span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
 
     /* ===================== MOBILE MENU ===================== */
     .mobile-menu {
@@ -199,9 +198,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .mobile-menu.active {
-      display: block;
-    }
+    .mobile-menu.active { display: block; }
 
     .mobile-menu-content {
       padding: 1rem;
@@ -256,6 +253,7 @@
       gap: 0.75rem;
       justify-content: center;
       flex-wrap: wrap;
+      align-items: center;
     }
 
     .filter-chip {
@@ -283,6 +281,30 @@
       box-shadow: 0 4px 12px var(--primary-glow);
     }
 
+    /* Recherche ville */
+    .city-search {
+      padding: 0.625rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 2rem;
+      font-size: 0.875rem;
+      font-family: 'Poppins', sans-serif;
+      color: var(--text-primary);
+      background: var(--bg-elevated);
+      outline: none;
+      width: 180px;
+      transition: all 0.3s;
+    }
+
+    .city-search:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+      background: white;
+    }
+
+    .city-search::placeholder {
+      color: #aaa;
+    }
+
     /* ===================== MAIN LAYOUT ===================== */
     .main-container {
       display: grid;
@@ -298,10 +320,7 @@
       border-right: 1px solid var(--border);
     }
 
-    #map {
-      width: 100%;
-      height: 100%;
-    }
+    #map { width: 100%; height: 100%; }
 
     .map-controls {
       position: absolute;
@@ -376,13 +395,8 @@
       font-weight: 600;
     }
 
-    .leaflet-popup-close-button:hover {
-      background: #f5f5f5 !important;
-    }
-
-    .leaflet-popup-close-button:hover::after {
-      color: #e63946;
-    }
+    .leaflet-popup-close-button:hover { background: #f5f5f5 !important; }
+    .leaflet-popup-close-button:hover::after { color: #e63946; }
 
     /* ===================== LISTE ===================== */
     .events-section {
@@ -417,10 +431,16 @@
       border: 1px solid var(--border);
     }
 
-    .events-grid {
-      display: grid;
-      gap: 1.5rem;
+    .events-grid { display: grid; gap: 1.5rem; }
+
+    .no-results {
+      text-align: center;
+      padding: 3rem 2rem;
+      display: none;
     }
+
+    .no-results-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .no-results-text { color: var(--text-secondary); font-size: 1rem; }
 
     /* ===================== CARTE ÉVÉNEMENT ===================== */
     .event-card {
@@ -437,12 +457,12 @@
       flex-direction: row;
     }
 
+    .event-card.hidden-by-filter { display: none !important; }
+
     .event-card::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       height: 3px;
       background: linear-gradient(90deg, var(--primary), var(--secondary));
       transform: scaleX(0);
@@ -455,9 +475,7 @@
       box-shadow: 0 8px 24px var(--shadow);
     }
 
-    .event-card:hover::before {
-      transform: scaleX(1);
-    }
+    .event-card:hover::before { transform: scaleX(1); }
 
     .event-card.highlighted {
       border-color: var(--primary);
@@ -484,9 +502,7 @@
     .event-image::after {
       content: '';
       position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      bottom: 0; left: 0; right: 0;
       height: 50%;
       background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
     }
@@ -574,9 +590,7 @@
       gap: 0.5rem;
     }
 
-    .event-description {
-      display: none;
-    }
+    .event-description { display: none; }
 
     .event-footer {
       display: flex;
@@ -628,10 +642,7 @@
       gap: 2rem;
     }
 
-    .footer-brand {
-      flex: 1;
-      max-width: 500px;
-    }
+    .footer-brand { flex: 1; max-width: 500px; }
 
     .footer-logo {
       font-family: 'Bebas Neue', sans-serif;
@@ -649,9 +660,7 @@
       font-size: 0.75rem;
     }
 
-    .footer-section {
-      flex-shrink: 0;
-    }
+    .footer-section { flex-shrink: 0; }
 
     .footer-section h3 {
       font-size: 0.6875rem;
@@ -669,9 +678,7 @@
       flex-wrap: wrap;
     }
 
-    .footer-links li {
-      position: relative;
-    }
+    .footer-links li { position: relative; }
 
     .footer-links li:not(:last-child)::after {
       content: '•';
@@ -688,9 +695,7 @@
       white-space: nowrap;
     }
 
-    .footer-links a:hover {
-      color: var(--primary);
-    }
+    .footer-links a:hover { color: var(--primary); }
 
     .footer-bottom {
       max-width: 1400px;
@@ -704,292 +709,102 @@
 
     /* ===================== RESPONSIVE 768px ===================== */
     @media (max-width: 768px) {
-      footer {
-        padding: 1.5rem 1rem;
-      }
-
-      .footer-content {
-        flex-direction: column;
-        gap: 1.5rem;
-        align-items: flex-start;
-      }
-
-      .footer-brand {
-        max-width: 100%;
-        text-align: left;
-      }
-
-      .footer-description {
-        font-size: 0.875rem;
-      }
-
-      .footer-section {
-        width: 100%;
-      }
-
-      .footer-section h3 {
-        font-size: 1rem;
-        margin-bottom: 0.75rem;
-      }
-
-      .footer-links {
-        gap: 0.5rem;
-        flex-wrap: wrap;
-      }
-
-      .footer-links li {
-        font-size: 0.875rem;
-      }
-
-      .footer-links li:not(:last-child)::after {
-        right: -0.35rem;
-      }
-
-      .footer-bottom {
-        padding-top: 1rem;
-        font-size: 0.8125rem;
-      }
+      footer { padding: 1.5rem 1rem; }
+      .footer-content { flex-direction: column; gap: 1.5rem; align-items: flex-start; }
+      .footer-brand { max-width: 100%; text-align: left; }
+      .footer-description { font-size: 0.875rem; }
+      .footer-section { width: 100%; }
+      .footer-section h3 { font-size: 1rem; margin-bottom: 0.75rem; }
+      .footer-links { gap: 0.5rem; flex-wrap: wrap; }
+      .footer-links li { font-size: 0.875rem; }
+      .footer-links li:not(:last-child)::after { right: -0.35rem; }
+      .footer-bottom { padding-top: 1rem; font-size: 0.8125rem; }
     }
 
     /* ===================== RESPONSIVE 1024px ===================== */
     @media (max-width: 1024px) {
-      html, body {
-        height: auto;
-        overflow: auto;
-      }
-
-      .main-container {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto;
-        height: auto;
-      }
-
-      .map-section {
-        position: relative;
-        height: 50vh;
-        border-right: none;
-        border-bottom: 1px solid var(--border);
-      }
-
-      .events-section {
-        height: auto;
-        overflow-y: visible;
-      }
+      html, body { height: auto; overflow: auto; }
+      .main-container { grid-template-columns: 1fr; grid-template-rows: auto; height: auto; }
+      .map-section { position: relative; height: 50vh; border-right: none; border-bottom: 1px solid var(--border); }
+      .events-section { height: auto; overflow-y: visible; }
     }
 
     /* ===================== RESPONSIVE 640px ===================== */
     @media (max-width: 640px) {
-      .navbar {
-        padding: 0.75rem 1rem;
-      }
+      .navbar { padding: 0.75rem 1rem; }
+      .navbar-brand { display: flex; flex-direction: column; align-items: flex-start; gap: 0.15rem; flex-shrink: 1; min-width: 0; }
+      .tagline { display: block; font-size: 1rem; line-height: 1.3; white-space: normal; color: var(--text-secondary); }
+      .logo { font-size: 1.4rem; }
+      .tagline br { display: block; }
+      .navbar-actions { display: none; }
+      .burger-menu { display: flex; }
 
-      .navbar-brand {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.15rem;
-        flex-shrink: 1;
-        min-width: 0;
-      }
+      .filters { padding: 1rem 0.5rem; }
+      .filters-container { justify-content: center; flex-wrap: wrap; padding: 0; }
+      .filter-chip { flex-shrink: 0; padding: 0.5rem 0.875rem; font-size: 0.8125rem; }
+      .city-search { width: 100%; order: -1; }
+      .filters::after { display: none; }
 
-      .tagline {
-        display: block;
-        font-size: 1rem;
-        line-height: 1.3;
-        white-space: normal;
-        color: var(--text-secondary);
-      }
+      .map-section { height: 55vh; }
 
-      .logo {
-        font-size: 1.4rem;
-      }
+      .leaflet-popup-content { min-width: unset; max-width: 200px; padding: 0.75rem !important; }
+      .leaflet-popup-content div[style*="background-image"] { height: 100px !important; }
+      .leaflet-popup-content strong { font-size: 0.95rem !important; }
 
-      .tagline br {
-        display: block;
-      }
+      .events-section { padding: 1rem; }
+      .events-header { padding: 1rem 0.5rem; gap: 0.5rem; }
+      .events-header h2 { font-size: 1.25rem; }
+      .events-count { font-size: 0.6875rem; padding: 0.25rem 0.5rem; white-space: nowrap; }
 
-      .navbar-actions {
-        display: none;
-      }
-
-      .burger-menu {
-        display: flex;
-      }
-
-      .filters {
-        padding: 1rem 0.5rem;
-      }
-
-      .filters-container {
-        justify-content: center;
-        flex-wrap: wrap;
-        padding: 0;
-      }
-
-      .filter-chip {
-        flex-shrink: 0;
-        padding: 0.5rem 0.875rem;
-        font-size: 0.8125rem;
-      }
-
-      .filters::after {
-        display: none;
-      }
-
-      .map-section {
-        height: 55vh;
-      }
-
-      /* Popup mobile */
-      .leaflet-popup-content {
-        min-width: unset;
-        max-width: 200px;
-        padding: 0.75rem !important;
-      }
-
-      .leaflet-popup-content div[style*="background-image"] {
-        height: 100px !important;
-      }
-
-      .leaflet-popup-content strong {
-        font-size: 0.95rem !important;
-      }
-
-      .events-section {
-        padding: 1rem;
-      }
-
-      .events-header {
-        padding: 1rem 0.5rem;
-        gap: 0.5rem;
-      }
-
-      .events-header h2 {
-        font-size: 1.25rem;
-      }
-
-      .events-count {
-        font-size: 0.6875rem;
-        padding: 0.25rem 0.5rem;
-        white-space: nowrap;
-      }
-
-      .event-card {
-        flex-direction: column;
-        padding: 0;
-      }
-
-      .event-left {
-        width: 100%;
-      }
-
-      .event-image {
-        width: 100%;
-        height: 150px;
-        border-radius: 1rem 1rem 0 0;
-      }
-
-      .event-description-left {
-        display: none;
-      }
-
-      .event-description {
-        display: block;
-        color: var(--text-secondary);
-        line-height: 1.5;
-        margin-bottom: 1rem;
-        font-size: 0.875rem;
-      }
-
-      .event-content {
-        padding: 1rem;
-      }
-
-      .event-title {
-        font-size: 1.125rem;
-      }
-
-      .event-meta {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-      }
-
-      .event-footer {
-        flex-direction: column;
-        gap: 0.75rem;
-      }
-
-      .event-cta {
-        width: 100%;
-        text-align: center;
-      }
-
-      .map-btn {
-        width: 44px;
-        height: 44px;
-        font-size: 1.25rem;
-      }
-
-      .map-controls {
-        bottom: 1rem;
-        right: 1rem;
-      }
+      .event-card { flex-direction: column; padding: 0; }
+      .event-left { width: 100%; }
+      .event-image { width: 100%; height: 150px; border-radius: 1rem 1rem 0 0; }
+      .event-description-left { display: none; }
+      .event-description { display: block; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1rem; font-size: 0.875rem; }
+      .event-content { padding: 1rem; }
+      .event-title { font-size: 1.125rem; }
+      .event-meta { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+      .event-footer { flex-direction: column; gap: 0.75rem; }
+      .event-cta { width: 100%; text-align: center; }
+      .map-btn { width: 44px; height: 44px; font-size: 1.25rem; }
+      .map-controls { bottom: 1rem; right: 1rem; }
     }
   </style>
 </head>
 <body>
   <!-- HEADER WRAPPER -->
   <div style="position: relative;">
-    <!-- NAVBAR -->
     <nav class="navbar">
       <%= link_to events_path, class: "navbar-brand" do %>
         <div class="logo">SalsaSpot</div>
         <span class="tagline">La plateforme des soirées<br> salsa, bachata, kizomba</span>
       <% end %>
 
-      <!-- Menu desktop -->
       <div class="navbar-actions">
-        <%= link_to about_path, class: "about-link" do %>
-          💃 À propos
-        <% end %>
-        <%= link_to discover_path, class: "discover-link" do %>
-          ✨ Découvrir les danses
-        <% end %>
-        <%= link_to contact_path, class: "about-link" do %>
-          📧 Contact
-        <% end %>
-        <%= link_to new_event_path, class: "navbar-cta" do %>
-          ➕ Ajouter une soirée
-        <% end %>
+        <%= link_to about_path, class: "about-link" do %>💃 À propos<% end %>
+        <%= link_to discover_path, class: "discover-link" do %>✨ Découvrir les danses<% end %>
+        <%= link_to contact_path, class: "about-link" do %>📧 Contact<% end %>
+        <%= link_to new_event_path, class: "navbar-cta" do %>➕ Ajouter une soirée<% end %>
       </div>
 
-      <!-- Burger mobile -->
       <button class="burger-menu" id="burger-btn">
-        <span></span>
-        <span></span>
-        <span></span>
+        <span></span><span></span><span></span>
       </button>
     </nav>
 
-    <!-- Menu mobile déroulant -->
     <div class="mobile-menu" id="mobile-menu">
       <div class="mobile-menu-content">
         <%= link_to about_path, class: "mobile-menu-link" do %>
-          <span style="font-size: 1.5rem;">ℹ️</span>
-          <span>À propos</span>
+          <span style="font-size: 1.5rem;">ℹ️</span><span>À propos</span>
         <% end %>
         <%= link_to discover_path, class: "mobile-menu-link" do %>
-          <span style="font-size: 1.5rem;">✨</span>
-          <span>Découvrir les danses</span>
+          <span style="font-size: 1.5rem;">✨</span><span>Découvrir les danses</span>
         <% end %>
         <%= link_to contact_path, class: "mobile-menu-link" do %>
-          <span style="font-size: 1.5rem;">📧</span>
-          <span>Contact</span>
+          <span style="font-size: 1.5rem;">📧</span><span>Contact</span>
         <% end %>
         <%= link_to new_event_path, class: "mobile-menu-link primary" do %>
-          <span style="font-size: 1.5rem;">➕</span>
-          <span>Ajouter une soirée</span>
+          <span style="font-size: 1.5rem;">➕</span><span>Ajouter une soirée</span>
         <% end %>
       </div>
     </div>
@@ -998,6 +813,7 @@
   <!-- FILTRES -->
   <div class="filters">
     <div class="filters-container">
+      <input type="text" class="city-search" id="city-search" placeholder="🔍 Rechercher une ville...">
       <button class="filter-chip active" data-style="">🌍 Toutes</button>
       <button class="filter-chip" data-style="salsa">💃 Salsa</button>
       <button class="filter-chip" data-style="bachata">🕺 Bachata</button>
@@ -1009,7 +825,6 @@
 
   <!-- MAIN -->
   <div class="main-container">
-    <!-- CARTE -->
     <div class="map-section">
       <div id="map"></div>
       <div class="map-controls">
@@ -1017,24 +832,25 @@
       </div>
     </div>
 
-    <!-- LISTE -->
     <div class="events-section">
       <div class="events-header">
         <h2>Soirées à venir</h2>
-        <span class="events-count"><%= @events.size %> événements</span>
+        <span class="events-count" id="events-count"><%= @events.size %> événements</span>
       </div>
 
-      <div class="events-grid">
+      <div class="events-grid" id="events-grid">
         <% if @events.any? %>
           <% @events.each do |event| %>
             <div class="event-card"
                  data-event-id="<%= event.id %>"
                  data-lat="<%= event.latitude %>"
-                 data-lng="<%= event.longitude %>">
+                 data-lng="<%= event.longitude %>"
+                 data-styles="<%= event.dance_styles.join(',') %>"
+                 data-free="<%= event.is_free %>"
+                 data-lessons="<%= event.has_lessons %>"
+                 data-city="<%= event.city&.downcase %>">
 
-              <%# Zone gauche : Photo + Description %>
               <div class="event-left">
-                <%# Photo de l'événement %>
                 <% if event.photos.attached? %>
                   <div class="event-image" style="background-image: url(<%= event.photo_url %>)"></div>
                 <% else %>
@@ -1044,15 +860,11 @@
                   <div class="event-image" style="background-image: url(<%= asset_path("#{default_style}.jpg") %>)"></div>
                 <% end %>
 
-                <%# Description sous la photo (desktop seulement) %>
                 <% if event.description.present? %>
-                  <div class="event-description-left">
-                    <%= truncate(event.description, length: 120) %>
-                  </div>
+                  <div class="event-description-left"><%= truncate(event.description, length: 120) %></div>
                 <% end %>
               </div>
 
-              <%# Contenu de la card - côté droit %>
               <div class="event-content">
                 <h3 class="event-title"><%= event.title %></h3>
 
@@ -1083,30 +895,23 @@
                   </span>
                 </div>
 
-                <%# Description dans la zone droite (mobile seulement) %>
                 <% if event.description.present? %>
                   <p class="event-description"><%= truncate(event.description, length: 100) %></p>
                 <% end %>
 
                 <div class="event-footer">
                   <div class="event-price"><%= event.price_display %></div>
-                  <%= link_to event_path(event), class: "event-cta" do %>
-                    Voir détails →
-                  <% end %>
+                  <%= link_to event_path(event), class: "event-cta" do %>Voir détails →<% end %>
                 </div>
               </div>
             </div>
           <% end %>
-        <% else %>
-          <div style="text-align: center; padding: 4rem 2rem;">
-            <div style="font-size: 4rem; margin-bottom: 1.5rem;">🎵</div>
-            <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--text-primary);">Aucune soirée</h3>
-            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Sois le premier à en ajouter une !</p>
-            <%= link_to new_event_path, class: "event-cta" do %>
-              ➕ Ajouter une soirée
-            <% end %>
-          </div>
         <% end %>
+      </div>
+
+      <div class="no-results" id="no-results">
+        <div class="no-results-icon">🔍</div>
+        <p class="no-results-text">Aucune soirée ne correspond à ta recherche.</p>
       </div>
     </div>
   </div>
@@ -1126,14 +931,15 @@
     const userLayer = L.layerGroup().addTo(map);
 
     let allEvents = [];
+    let activeFilter = null;
+    let cityQuery = '';
+
     fetch('/events.json')
       .then(r => r.json())
       .then(events => {
         allEvents = events;
-        renderMarkers(events);
+        applyFilters();
       });
-
-    let activeFilter = null;
 
     function formatLocation(event) {
       const parts = [event.venue_name, event.address, event.city];
@@ -1147,6 +953,73 @@
         if (!isDuplicate) unique.push(part);
       }
       return unique.join(', ');
+    }
+
+    function applyFilters() {
+      let filtered = allEvents;
+
+      // Filtre par style / gratuit / cours
+      const activeChip = document.querySelector('.filter-chip.active');
+      const style = activeChip?.dataset.style;
+      const free = activeChip?.dataset.free;
+      const lessons = activeChip?.dataset.lessons;
+
+      activeFilter = style || null;
+
+      if (style) filtered = filtered.filter(e => e.dance_styles.includes(style));
+      if (free) filtered = filtered.filter(e => e.is_free);
+      if (lessons) filtered = filtered.filter(e => e.has_lessons);
+
+      // Filtre par ville
+      if (cityQuery) {
+        filtered = filtered.filter(e =>
+          e.city && e.city.toLowerCase().includes(cityQuery)
+        );
+      }
+
+      // Mettre à jour les markers
+      renderMarkers(filtered);
+
+      // Mettre à jour les cards
+      filterCards(style, free, lessons);
+
+      // Si une ville est cherchée et qu'il y a des résultats, zoomer
+      if (cityQuery && filtered.length > 0) {
+        const bounds = L.latLngBounds(filtered.map(e => [e.latitude, e.longitude]).filter(c => c[0] && c[1]));
+        if (bounds.isValid()) map.fitBounds(bounds, { padding: [50, 50], maxZoom: 13 });
+      }
+    }
+
+    function filterCards(style, free, lessons) {
+      const cards = document.querySelectorAll('.event-card');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const cardStyles = card.dataset.styles || '';
+        const cardFree = card.dataset.free === 'true';
+        const cardLessons = card.dataset.lessons === 'true';
+        const cardCity = card.dataset.city || '';
+
+        let show = true;
+
+        if (style && !cardStyles.includes(style)) show = false;
+        if (free && !cardFree) show = false;
+        if (lessons && !cardLessons) show = false;
+        if (cityQuery && !cardCity.includes(cityQuery)) show = false;
+
+        if (show) {
+          card.classList.remove('hidden-by-filter');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden-by-filter');
+        }
+      });
+
+      // Mettre à jour le compteur
+      document.getElementById('events-count').textContent = visibleCount + ' événement' + (visibleCount > 1 ? 's' : '');
+
+      // Message "aucun résultat"
+      document.getElementById('no-results').style.display = visibleCount === 0 ? 'block' : 'none';
     }
 
     function renderMarkers(events) {
@@ -1171,19 +1044,11 @@
         const icon = L.divIcon({
           html: `
             <div style="
-              background: ${color};
-              color: white;
-              width: 50px;
-              height: 50px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              border-radius: 50%;
-              font-size: 24px;
+              background: ${color}; color: white; width: 50px; height: 50px;
+              display: flex; align-items: center; justify-content: center;
+              border-radius: 50%; font-size: 24px;
               box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-              border: 3px solid white;
-              cursor: pointer;
-              transition: transform 0.2s;
+              border: 3px solid white; cursor: pointer; transition: transform 0.2s;
             " onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
               ${emoji}
             </div>
@@ -1197,15 +1062,7 @@
           .bindPopup(`
             <div style="font-family: 'Poppins', sans-serif;">
               ${event.photo_url ? `
-                <div style="
-                  width: 100%;
-                  height: 140px;
-                  background-image: url(${event.photo_url});
-                  background-size: cover;
-                  background-position: center top;
-                  border-radius: 8px;
-                  margin-bottom: 12px;
-                "></div>
+                <div style="width: 100%; height: 140px; background-image: url(${event.photo_url}); background-size: cover; background-position: center top; border-radius: 8px; margin-bottom: 12px;"></div>
               ` : ''}
               <strong style="font-size: 1.125rem; display: block; margin-bottom: 10px; color: #1a1a1a; line-height: 1.3;">${event.title}</strong>
               <div style="color: #666; margin-bottom: 6px; font-size: 0.9375rem;">
@@ -1218,15 +1075,9 @@
                 <span style="margin-right: 8px;">💰</span>${event.price_display}
               </div>
               <a href="/events/${event.slug}" style="
-                display: inline-block;
-                background: linear-gradient(135deg, #ff6b35, #f7931e);
-                color: white;
-                padding: 10px 20px;
-                border-radius: 25px;
-                text-decoration: none;
-                font-weight: 600;
-                font-size: 0.9375rem;
-                box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+                display: inline-block; background: linear-gradient(135deg, #ff6b35, #f7931e);
+                color: white; padding: 10px 20px; border-radius: 25px; text-decoration: none;
+                font-weight: 600; font-size: 0.9375rem; box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
               ">Voir détails →</a>
             </div>
           `)
@@ -1247,19 +1098,12 @@
 
       if ('geolocation' in navigator) {
         document.getElementById('locate-btn').textContent = '⏳';
-
         navigator.geolocation.getCurrentPosition(pos => {
           const { latitude, longitude } = pos.coords;
-
           userLayer.clearLayers();
           L.circleMarker([latitude, longitude], {
-            radius: 10,
-            color: '#ffffff',
-            fillColor: '#1976D2',
-            fillOpacity: 1,
-            weight: 4
+            radius: 10, color: '#ffffff', fillColor: '#1976D2', fillOpacity: 1, weight: 4
           }).addTo(userLayer);
-
           map.flyTo([latitude, longitude], 13);
           document.getElementById('locate-btn').textContent = '🛑';
         }, () => {
@@ -1269,39 +1113,33 @@
       }
     });
 
-    // Filtres
+    // Filtres (chips)
     document.querySelectorAll('.filter-chip').forEach(chip => {
       chip.addEventListener('click', () => {
         document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
         chip.classList.add('active');
-
-        const style = chip.dataset.style;
-        const free = chip.dataset.free;
-        const lessons = chip.dataset.lessons;
-
-        activeFilter = style || null;
-
-        let filtered = allEvents;
-
-        if (style) filtered = filtered.filter(e => e.dance_styles.includes(style));
-        if (free) filtered = filtered.filter(e => e.is_free);
-        if (lessons) filtered = filtered.filter(e => e.has_lessons);
-
-        renderMarkers(filtered);
+        applyFilters();
       });
+    });
+
+    // Recherche par ville
+    let searchTimeout;
+    document.getElementById('city-search').addEventListener('input', (e) => {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        cityQuery = e.target.value.trim().toLowerCase();
+        applyFilters();
+      }, 300);
     });
 
     // Interaction carte ↔ liste
     document.querySelectorAll('.event-card').forEach(card => {
       card.addEventListener('click', (e) => {
         if (e.target.closest('.event-cta')) return;
-
         const lat = parseFloat(card.dataset.lat);
         const lng = parseFloat(card.dataset.lng);
-
         if (lat && lng) {
           map.flyTo([lat, lng], 15, { duration: 1.5 });
-
           document.querySelectorAll('.event-card').forEach(c => c.classList.remove('highlighted'));
           card.classList.add('highlighted');
         }
@@ -1317,14 +1155,12 @@
         burgerBtn.classList.toggle('active');
         mobileMenu.classList.toggle('active');
       });
-
       document.querySelectorAll('.mobile-menu-link').forEach(link => {
         link.addEventListener('click', () => {
           burgerBtn.classList.remove('active');
           mobileMenu.classList.remove('active');
         });
       });
-
       document.addEventListener('click', (e) => {
         if (!burgerBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
           burgerBtn.classList.remove('active');
