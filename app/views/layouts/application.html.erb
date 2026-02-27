@@ -13,14 +13,400 @@
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Righteous&family=Bebas+Neue&display=swap" rel="stylesheet">
+
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+
+    <% unless content_for?(:standalone_page) %>
+    <style>
+      :root {
+        --primary: #ff6b35;
+        --primary-glow: rgba(255, 107, 53, 0.3);
+        --secondary: #f7931e;
+        --bg-light: #fafafa;
+        --bg-card: #ffffff;
+        --bg-elevated: #f5f5f5;
+        --text-primary: #1a1a1a;
+        --text-secondary: #666666;
+        --border: rgba(0, 0, 0, 0.1);
+        --shadow: rgba(0, 0, 0, 0.08);
+      }
+
+      body {
+        font-family: 'Poppins', sans-serif;
+        background: var(--bg-light);
+        color: var(--text-primary);
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .site-navbar {
+        background: var(--bg-card);
+        border-bottom: 1px solid var(--border);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 8px var(--shadow);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .site-navbar .navbar-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        text-decoration: none;
+      }
+
+      .site-navbar .logo {
+        font-family: 'Righteous', sans-serif;
+        font-size: 1.75rem;
+        letter-spacing: 0.05em;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .site-navbar .tagline {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+      }
+
+      .site-navbar .navbar-actions {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+      }
+
+      .site-navbar .nav-link {
+        background: rgba(46, 125, 50, 0.1);
+        color: #2e7d32;
+        border: 1px solid rgba(46, 125, 50, 0.3);
+        padding: 0.625rem 1.25rem;
+        border-radius: 2rem;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9375rem;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+      }
+
+      .site-navbar .nav-link:hover {
+        background: #2e7d32;
+        color: white;
+        border-color: #2e7d32;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+      }
+
+      .site-navbar .nav-link-outline {
+        background: white;
+        color: var(--primary);
+        border: 2px solid var(--primary);
+        padding: 0.625rem 1.25rem;
+        border-radius: 2rem;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9375rem;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+      }
+
+      .site-navbar .nav-link-outline:hover {
+        background: var(--primary);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+      }
+
+      .site-navbar .navbar-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        text-decoration: none;
+        border-radius: 2rem;
+        font-weight: 600;
+        transition: all 0.3s;
+        box-shadow: 0 4px 12px var(--primary-glow);
+      }
+
+      .site-navbar .navbar-cta:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px var(--primary-glow);
+      }
+
+      .site-navbar .burger-menu {
+        display: none;
+        flex-direction: column;
+        gap: 4px;
+        cursor: pointer;
+        padding: 0.5rem;
+        background: none;
+        border: none;
+      }
+
+      .site-navbar .burger-menu span {
+        width: 24px;
+        height: 3px;
+        background: var(--primary);
+        border-radius: 2px;
+        transition: all 0.3s;
+      }
+
+      .site-navbar .burger-menu.active span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
+      .site-navbar .burger-menu.active span:nth-child(2) { opacity: 0; }
+      .site-navbar .burger-menu.active span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
+
+      .site-mobile-menu {
+        display: none;
+        background: var(--bg-card);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 4px 12px var(--shadow);
+        animation: slideDown 0.3s ease-out;
+      }
+
+      @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .site-mobile-menu.active { display: block; }
+
+      .site-mobile-menu .mobile-menu-content {
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .site-mobile-menu .mobile-menu-link {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.875rem 1rem;
+        background: var(--bg-elevated);
+        border-radius: 0.75rem;
+        text-decoration: none;
+        color: var(--text-primary);
+        font-weight: 500;
+        font-size: 0.9375rem;
+        transition: all 0.2s;
+        border: 1px solid transparent;
+      }
+
+      .site-mobile-menu .mobile-menu-link:hover {
+        background: white;
+        border-color: var(--primary);
+        transform: translateX(4px);
+      }
+
+      .site-mobile-menu .mobile-menu-link.primary {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        box-shadow: 0 2px 8px var(--primary-glow);
+      }
+
+      .site-main { flex: 1; }
+
+      .site-footer {
+        background: var(--bg-card);
+        border-top: 1px solid var(--border);
+        padding: 2rem;
+        margin-top: auto;
+      }
+
+      .site-footer .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 2rem;
+      }
+
+      .site-footer .footer-brand { flex: 1; max-width: 400px; }
+
+      .site-footer .footer-logo {
+        font-family: 'Righteous', sans-serif;
+        font-size: 1.25rem;
+        letter-spacing: 0.05em;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+      }
+
+      .site-footer .footer-description {
+        color: var(--text-secondary);
+        line-height: 1.5;
+        font-size: 0.875rem;
+      }
+
+      .site-footer .footer-section h3 {
+        font-size: 0.75rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .site-footer .footer-links {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.375rem;
+      }
+
+      .site-footer .footer-links a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.875rem;
+        transition: color 0.2s;
+      }
+
+      .site-footer .footer-links a:hover { color: var(--primary); }
+
+      .site-footer .footer-bottom {
+        max-width: 1200px;
+        margin: 1rem auto 0;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border);
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.8125rem;
+      }
+
+      @media (max-width: 768px) {
+        .site-navbar .navbar-actions { display: none; }
+        .site-navbar .burger-menu { display: flex; }
+        .site-navbar .tagline { display: none; }
+        .site-navbar { padding: 0.75rem 1rem; }
+        .site-footer .footer-content { flex-direction: column; gap: 1.5rem; }
+        .site-footer .footer-brand { max-width: 100%; }
+        .site-footer .footer-links { flex-direction: row; flex-wrap: wrap; gap: 0.75rem; }
+      }
+    </style>
+    <% end %>
   </head>
 
   <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+    <% unless content_for?(:standalone_page) %>
+      <nav class="site-navbar">
+        <%= link_to root_path, class: "navbar-brand" do %>
+          <div class="logo">SalsaSpot</div>
+          <span class="tagline">Soirées salsa, bachata, kizomba</span>
+        <% end %>
+
+        <div class="navbar-actions">
+          <%= link_to about_path, class: "nav-link" do %>💃 À propos<% end %>
+          <%= link_to discover_path, class: "nav-link-outline" do %>✨ Découvrir<% end %>
+          <%= link_to contact_path, class: "nav-link" do %>📧 Contact<% end %>
+          <%= link_to new_event_path, class: "navbar-cta" do %>➕ Ajouter une soirée<% end %>
+        </div>
+
+        <button class="burger-menu" id="layout-burger-btn">
+          <span></span><span></span><span></span>
+        </button>
+      </nav>
+
+      <div class="site-mobile-menu" id="layout-mobile-menu">
+        <div class="mobile-menu-content">
+          <%= link_to root_path, class: "mobile-menu-link" do %>
+            <span style="font-size: 1.5rem;">🗺️</span><span>Carte des soirées</span>
+          <% end %>
+          <%= link_to about_path, class: "mobile-menu-link" do %>
+            <span style="font-size: 1.5rem;">💃</span><span>À propos</span>
+          <% end %>
+          <%= link_to discover_path, class: "mobile-menu-link" do %>
+            <span style="font-size: 1.5rem;">✨</span><span>Découvrir les danses</span>
+          <% end %>
+          <%= link_to contact_path, class: "mobile-menu-link" do %>
+            <span style="font-size: 1.5rem;">📧</span><span>Contact</span>
+          <% end %>
+          <%= link_to new_event_path, class: "mobile-menu-link primary" do %>
+            <span style="font-size: 1.5rem;">➕</span><span>Ajouter une soirée</span>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <main class="site-main">
       <%= yield %>
     </main>
+
+    <% unless content_for?(:standalone_page) %>
+      <footer class="site-footer">
+        <div class="footer-content">
+          <div class="footer-brand">
+            <div class="footer-logo">SalsaSpot</div>
+            <p class="footer-description">
+              La plateforme pour découvrir toutes les soirées salsa, bachata et kizomba près de chez toi.
+            </p>
+          </div>
+
+          <div class="footer-section">
+            <h3>Navigation</h3>
+            <ul class="footer-links">
+              <li><%= link_to "Carte des soirées", root_path %></li>
+              <li><%= link_to "Ajouter une soirée", new_event_path %></li>
+            </ul>
+          </div>
+
+          <div class="footer-section">
+            <h3>Légal</h3>
+            <ul class="footer-links">
+              <li><%= link_to "Mentions légales", mentions_path %></li>
+              <li><%= link_to "Confidentialité", politique_path %></li>
+              <li><%= link_to "CGU", cgu_path %></li>
+              <li><%= link_to "Contact", contact_path %></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>&copy; <%= Time.current.year %> SalsaSpot. Fait avec ❤️ pour la communauté latino.</p>
+        </div>
+      </footer>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const burger = document.getElementById('layout-burger-btn');
+          const menu = document.getElementById('layout-mobile-menu');
+          if (burger && menu) {
+            burger.addEventListener('click', () => {
+              burger.classList.toggle('active');
+              menu.classList.toggle('active');
+            });
+            document.addEventListener('click', (e) => {
+              if (!burger.contains(e.target) && !menu.contains(e.target)) {
+                burger.classList.remove('active');
+                menu.classList.remove('active');
+              }
+            });
+          }
+        });
+      </script>
+    <% end %>
   </body>
 </html>
