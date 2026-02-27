@@ -38,7 +38,7 @@ class EventsController < ApplicationController
     @event.is_active = false
     if @event.save
       # Notification par email
-      EventMailer.new_event_notification(@event).deliver_later if defined?(EventMailer)
+      EventMailer.new_event_submission(@event).deliver_later
       redirect_to merci_events_path, status: :see_other
     else
       render :new, status: :unprocessable_entity
