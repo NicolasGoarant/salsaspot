@@ -1141,6 +1141,20 @@
     // Variable globale pour le filtre actif
     let activeFilter = null;
 
+    function formatLocation(event) {
+      const parts = [event.venue_name, event.address, event.city];
+      const unique = [];
+      for (const part of parts) {
+        if (!part) continue;
+        const isDuplicate = unique.some(u =>
+          u.toLowerCase().includes(part.toLowerCase()) ||
+          part.toLowerCase().includes(u.toLowerCase())
+        );
+        if (!isDuplicate) unique.push(part);
+      }
+      return unique.join(', ');
+    }
+
     function renderMarkers(events) {
       markersLayer.clearLayers();
 
@@ -1204,7 +1218,7 @@
               ` : ''}
               <strong style="font-size: 1.125rem; display: block; margin-bottom: 10px; color: #1a1a1a; line-height: 1.3;">${event.title}</strong>
                 <div style="color: #666; margin-bottom: 6px; font-size: 0.9375rem;">
-                 <span style="margin-right: 8px;">📍</span>${event.venue_name}${event.address ? ', ' + event.address : ''}, ${event.city}
+                 <span style="margin-right: 8px;">📍</span>${formatLocation(event)}
                 </div>
                 <div style="color: #666; margin-bottom: 6px; font-size: 0.9375rem;">
                   <span style="margin-right: 8px;">📅</span>${event.date_display}
