@@ -915,6 +915,31 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
+    // Burger menu mobile — en premier pour garantir le fonctionnement
+    (function() {
+      const burgerBtn = document.getElementById('burger-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      if (burgerBtn && mobileMenu) {
+        burgerBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          burgerBtn.classList.toggle('active');
+          mobileMenu.classList.toggle('active');
+        });
+        document.querySelectorAll('.mobile-menu-link').forEach(link => {
+          link.addEventListener('click', () => {
+            burgerBtn.classList.remove('active');
+            mobileMenu.classList.remove('active');
+          });
+        });
+        document.addEventListener('click', (e) => {
+          if (!burgerBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+            burgerBtn.classList.remove('active');
+            mobileMenu.classList.remove('active');
+          }
+        });
+      }
+    })();
+
     const map = L.map('map', { zoomControl: false }).setView([46.603354, 1.888334], 6);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -1196,28 +1221,6 @@
       });
     });
 
-    // Burger menu mobile
-    const burgerBtn = document.getElementById('burger-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-
-    if (burgerBtn && mobileMenu) {
-      burgerBtn.addEventListener('click', () => {
-        burgerBtn.classList.toggle('active');
-        mobileMenu.classList.toggle('active');
-      });
-      document.querySelectorAll('.mobile-menu-link').forEach(link => {
-        link.addEventListener('click', () => {
-          burgerBtn.classList.remove('active');
-          mobileMenu.classList.remove('active');
-        });
-      });
-      document.addEventListener('click', (e) => {
-        if (!burgerBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
-          burgerBtn.classList.remove('active');
-          mobileMenu.classList.remove('active');
-        }
-      });
-    }
   </script>
 
   <!-- FOOTER -->
