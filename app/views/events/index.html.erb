@@ -709,9 +709,9 @@
       .navbar-actions { display: none; }
       .burger-menu { display: flex; }
 
-      .filters { padding: 1rem 0.5rem; }
-      .filters-container { justify-content: center; flex-wrap: wrap; padding: 0; }
-      .filter-select { font-size: 1rem; padding: 0.75rem 2.25rem 0.75rem 1.25rem; }
+      .filters { padding: 0.5rem; }
+      .filters-container { justify-content: center; flex-wrap: nowrap; padding: 0; gap: 0.5rem; }
+      .filter-select { font-size: 0.8125rem; padding: 0.5rem 1.5rem 0.5rem 0.625rem; flex: 1; min-width: 0; }
       .filters::after { display: none; }
 
       .map-section { height: 55vh; }
@@ -787,7 +787,7 @@
   <div class="filters">
     <div class="filters-container">
       <select class="filter-select" id="style-filter">
-        <option value="">💃 Danse</option>
+        <option value="">💃 Danses</option>
         <option value="salsa">💃 Salsa</option>
         <option value="bachata">🕺 Bachata</option>
         <option value="kizomba">❤️ Kizomba</option>
