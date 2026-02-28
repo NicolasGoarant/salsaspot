@@ -1,7 +1,7 @@
 # config/routes.rb
 Rails.application.routes.draw do
   root "events#index"
-
+  get '/soirees', to: 'events#list', as: :soirees
   resources :events, only: [:index, :show, :new, :create] do
     collection do
       get :merci

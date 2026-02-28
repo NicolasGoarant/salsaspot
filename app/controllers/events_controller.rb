@@ -48,6 +48,10 @@ class EventsController < ApplicationController
   def merci
   end
 
+  def list
+    @events = Event.where(is_active: true).where("starts_at >= ?", Time.current).order(:starts_at)
+  end
+
   private
 
   def event_params
@@ -61,4 +65,6 @@ class EventsController < ApplicationController
       dance_styles: [], photos: []
     )
   end
+
+
 end

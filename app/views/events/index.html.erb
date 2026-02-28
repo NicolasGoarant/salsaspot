@@ -411,6 +411,23 @@
       color: var(--text-primary);
     }
 
+    .events-header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .see-all-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      transition: opacity 0.2s;
+      white-space: nowrap;
+    }
+
+    .see-all-link:hover { opacity: 0.7; }
+
     .events-count {
       font-size: 0.875rem;
       font-weight: 600;
@@ -422,6 +439,29 @@
     }
 
     .events-grid { display: grid; gap: 1.5rem; }
+
+    .see-all-cta {
+      padding: 1.5rem 1rem;
+      text-align: center;
+    }
+
+    .see-all-btn {
+      display: inline-block;
+      padding: 0.875rem 2rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      text-decoration: none;
+      border-radius: 2rem;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    .see-all-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--primary-glow);
+    }
 
     .no-results {
       text-align: center;
@@ -710,6 +750,7 @@
       <% end %>
 
       <div class="navbar-actions">
+        <%= link_to soirees_path, class: "about-link" do %>📋 Toutes les soirées<% end %>
         <%= link_to about_path, class: "about-link" do %>💃 À propos<% end %>
         <%= link_to discover_path, class: "discover-link" do %>✨ Découvrir les danses<% end %>
         <%= link_to contact_path, class: "about-link" do %>📧 Contact<% end %>
@@ -723,6 +764,9 @@
 
     <div class="mobile-menu" id="mobile-menu">
       <div class="mobile-menu-content">
+        <%= link_to soirees_path, class: "mobile-menu-link" do %>
+          <span style="font-size: 1.5rem;">📋</span><span>Toutes les soirées</span>
+        <% end %>
         <%= link_to about_path, class: "mobile-menu-link" do %>
           <span style="font-size: 1.5rem;">ℹ️</span><span>À propos</span>
         <% end %>
@@ -743,7 +787,7 @@
   <div class="filters">
     <div class="filters-container">
       <select class="filter-select" id="style-filter">
-        <option value="">💃 Danses</option>
+        <option value="">💃 Danse</option>
         <option value="salsa">💃 Salsa</option>
         <option value="bachata">🕺 Bachata</option>
         <option value="kizomba">❤️ Kizomba</option>
@@ -774,12 +818,15 @@
     <div class="events-section">
       <div class="events-header">
         <h2>Soirées à venir</h2>
-        <span class="events-count" id="events-count"><%= @events.size %> événements</span>
+        <div class="events-header-right">
+          <span class="events-count" id="events-count"><%= @events.size %> événements</span>
+          <%= link_to soirees_path, class: "see-all-link" do %>Voir tout →<% end %>
+        </div>
       </div>
 
       <div class="events-grid" id="events-grid">
         <% if @events.any? %>
-          <% @events.each do |event| %>
+          <% @events.first(7).each do |event| %>
             <div class="event-card"
                  data-event-id="<%= event.id %>"
                  data-lat="<%= event.latitude %>"
@@ -848,6 +895,14 @@
           <% end %>
         <% end %>
       </div>
+
+      <% if @events.size > 7 %>
+        <div class="see-all-cta">
+          <%= link_to soirees_path, class: "see-all-btn" do %>
+            Voir les <%= @events.size %> soirées →
+          <% end %>
+        </div>
+      <% end %>
 
       <div class="no-results" id="no-results">
         <div class="no-results-icon">🔍</div>
