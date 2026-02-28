@@ -22,7 +22,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Righteous&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Righteous&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -43,7 +43,7 @@
     html, body { height: 100%; overflow: hidden; }
 
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Outfit', sans-serif;
       background: var(--bg-light);
       color: var(--text-primary);
       display: flex;
@@ -257,29 +257,42 @@
       align-items: center;
     }
 
-    .filter-chip {
-      padding: 0.625rem 1.25rem;
+    .filter-select {
+      padding: 0.875rem 2.5rem 0.875rem 1.5rem;
       background: var(--bg-elevated);
       border: 1px solid var(--border);
       border-radius: 2rem;
-      font-size: 0.875rem;
+      font-size: 1.125rem;
       font-weight: 500;
       color: var(--text-secondary);
       cursor: pointer;
       transition: all 0.3s;
-      white-space: nowrap;
+      font-family: inherit;
+      appearance: none;
+      -webkit-appearance: none;
+      text-align: center;
+      text-align-last: center;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.875rem center;
     }
 
-    .filter-chip:hover {
-      background: #e8e8e8;
+    .filter-select:hover {
       border-color: var(--primary);
     }
 
-    .filter-chip.active {
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border-color: transparent;
-      color: white;
-      box-shadow: 0 4px 12px var(--primary-glow);
+    .filter-select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    .filter-select.active {
+      background-color: #eef4ff;
+      border-color: #1976d2;
+      color: #1976d2;
+      font-weight: 600;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%231976d2' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     }
 
     /* ===================== MAIN LAYOUT ===================== */
@@ -340,7 +353,7 @@
     .leaflet-popup-content {
       margin: 0 !important;
       padding: 1rem !important;
-      font-family: 'Poppins', sans-serif !important;
+      font-family: 'Outfit', sans-serif !important;
       min-width: 260px;
     }
 
@@ -392,7 +405,7 @@
     }
 
     .events-header h2 {
-      font-family: 'Bebas Neue', sans-serif;
+      font-family: 'Righteous', sans-serif;
       font-size: 2rem;
       letter-spacing: 0.05em;
       color: var(--text-primary);
@@ -658,7 +671,7 @@
 
       .filters { padding: 1rem 0.5rem; }
       .filters-container { justify-content: center; flex-wrap: wrap; padding: 0; }
-      .filter-chip { flex-shrink: 0; padding: 0.5rem 0.875rem; font-size: 0.8125rem; }
+      .filter-select { font-size: 1rem; padding: 0.75rem 2.25rem 0.75rem 1.25rem; }
       .filters::after { display: none; }
 
       .map-section { height: 55vh; }
@@ -729,12 +742,23 @@
   <!-- FILTRES -->
   <div class="filters">
     <div class="filters-container">
-      <button class="filter-chip active" data-style="">🌍 Toutes</button>
-      <button class="filter-chip" data-style="salsa">💃 Salsa</button>
-      <button class="filter-chip" data-style="bachata">🕺 Bachata</button>
-      <button class="filter-chip" data-style="kizomba">❤️ Kizomba</button>
-      <button class="filter-chip" data-free="true">💸 Gratuit</button>
-      <button class="filter-chip" data-lessons="true">📚 Cours</button>
+      <select class="filter-select" id="style-filter">
+        <option value="">💃 Danse</option>
+        <option value="salsa">💃 Salsa</option>
+        <option value="bachata">🕺 Bachata</option>
+        <option value="kizomba">❤️ Kizomba</option>
+      </select>
+      <select class="filter-select" id="extra-filter">
+        <option value="">🏷️ Bon plan</option>
+        <option value="free">💸 Gratuit</option>
+        <option value="lessons">📚 Avec cours</option>
+      </select>
+      <select class="filter-select" id="time-filter">
+        <option value="">📅 Quand ?</option>
+        <option value="tonight">🌙 Ce soir</option>
+        <option value="weekend">🎉 Ce weekend</option>
+        <option value="week">📆 Cette semaine</option>
+      </select>
     </div>
   </div>
 
@@ -763,7 +787,8 @@
                  data-styles="<%= event.dance_styles.join(',') %>"
                  data-free="<%= event.is_free %>"
                  data-lessons="<%= event.has_lessons %>"
-                 data-city="<%= event.city&.downcase %>">
+                 data-city="<%= event.city&.downcase %>"
+                 data-date="<%= event.starts_at.strftime('%Y-%m-%d') %>">
 
               <div class="event-left">
                 <% if event.photos.attached? %>
@@ -847,6 +872,7 @@
 
     let allEvents = [];
     let activeFilter = null;
+    let activeTimeFilter = '';
     let cityQuery = '';
 
     fetch('/events.json')
@@ -870,20 +896,62 @@
       return unique.join(', ');
     }
 
+    function getTimeRange(timeFilter) {
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
+      if (timeFilter === 'tonight') {
+        return { start: today, end: tomorrow };
+      }
+      if (timeFilter === 'weekend') {
+        const day = today.getDay(); // 0=dim, 6=sam
+        const saturday = new Date(today);
+        saturday.setDate(today.getDate() + (6 - day));
+        const monday = new Date(saturday);
+        monday.setDate(saturday.getDate() + 2);
+        return { start: saturday, end: monday };
+      }
+      if (timeFilter === 'week') {
+        const nextWeek = new Date(today);
+        nextWeek.setDate(today.getDate() + 7);
+        return { start: today, end: nextWeek };
+      }
+      return null;
+    }
+
+    function matchesTimeFilter(dateStr, timeFilter) {
+      if (!timeFilter) return true;
+      const range = getTimeRange(timeFilter);
+      if (!range) return true;
+      const d = new Date(dateStr + 'T00:00:00');
+      return d >= range.start && d < range.end;
+    }
+
     function applyFilters() {
       let filtered = allEvents;
 
-      // Filtre par style / gratuit / cours
-      const activeChip = document.querySelector('.filter-chip.active');
-      const style = activeChip?.dataset.style;
-      const free = activeChip?.dataset.free;
-      const lessons = activeChip?.dataset.lessons;
+      // Filtre par style (dropdown)
+      const style = document.getElementById('style-filter').value;
+
+      // Filtre extra (dropdown)
+      const extraFilter = document.getElementById('extra-filter').value;
 
       activeFilter = style || null;
 
       if (style) filtered = filtered.filter(e => e.dance_styles.includes(style));
-      if (free) filtered = filtered.filter(e => e.is_free);
-      if (lessons) filtered = filtered.filter(e => e.has_lessons);
+      if (extraFilter === 'free') filtered = filtered.filter(e => e.is_free);
+      if (extraFilter === 'lessons') filtered = filtered.filter(e => e.has_lessons);
+
+      // Filtre temporel
+      if (activeTimeFilter) {
+        filtered = filtered.filter(e => {
+          if (!e.starts_at) return false;
+          const dateStr = e.starts_at.substring(0, 10);
+          return matchesTimeFilter(dateStr, activeTimeFilter);
+        });
+      }
 
       // Filtre par ville
       if (cityQuery) {
@@ -896,7 +964,7 @@
       renderMarkers(filtered);
 
       // Mettre à jour les cards
-      filterCards(style, free, lessons);
+      filterCards(style, extraFilter);
 
       // Si une ville est cherchée et qu'il y a des résultats, zoomer
       if (cityQuery && filtered.length > 0) {
@@ -905,7 +973,7 @@
       }
     }
 
-    function filterCards(style, free, lessons) {
+    function filterCards(style, extraFilter) {
       const cards = document.querySelectorAll('.event-card');
       let visibleCount = 0;
 
@@ -914,13 +982,15 @@
         const cardFree = card.dataset.free === 'true';
         const cardLessons = card.dataset.lessons === 'true';
         const cardCity = card.dataset.city || '';
+        const cardDate = card.dataset.date || '';
 
         let show = true;
 
         if (style && !cardStyles.includes(style)) show = false;
-        if (free && !cardFree) show = false;
-        if (lessons && !cardLessons) show = false;
+        if (extraFilter === 'free' && !cardFree) show = false;
+        if (extraFilter === 'lessons' && !cardLessons) show = false;
         if (cityQuery && !cardCity.includes(cityQuery)) show = false;
+        if (activeTimeFilter && !matchesTimeFilter(cardDate, activeTimeFilter)) show = false;
 
         if (show) {
           card.classList.remove('hidden-by-filter');
@@ -975,7 +1045,7 @@
 
         L.marker([event.latitude, event.longitude], { icon })
           .bindPopup(`
-            <div style="font-family: 'Poppins', sans-serif;">
+            <div style="font-family: 'Outfit', sans-serif;">
               ${event.photo_url ? `
                 <div style="width: 100%; height: 140px; background-image: url(${event.photo_url}); background-size: cover; background-position: center top; border-radius: 8px; margin-bottom: 12px;"></div>
               ` : ''}
@@ -1028,13 +1098,23 @@
       }
     });
 
-    // Filtres (chips)
-    document.querySelectorAll('.filter-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
-        applyFilters();
-      });
+    // Filtre style (dropdown Danse)
+    document.getElementById('style-filter').addEventListener('change', (e) => {
+      e.target.classList.toggle('active', !!e.target.value);
+      applyFilters();
+    });
+
+    // Filtre extra (dropdown Bon plan)
+    document.getElementById('extra-filter').addEventListener('change', (e) => {
+      e.target.classList.toggle('active', !!e.target.value);
+      applyFilters();
+    });
+
+    // Filtre temporel (dropdown Quand)
+    document.getElementById('time-filter').addEventListener('change', (e) => {
+      activeTimeFilter = e.target.value;
+      e.target.classList.toggle('active', !!activeTimeFilter);
+      applyFilters();
     });
 
     // Recherche par ville
