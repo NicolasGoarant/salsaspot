@@ -68,7 +68,7 @@ gem 'dotenv-rails', groups: [:development, :test]
 gem "cloudinary"
 gem "activestorage-cloudinary-service"
 
-gem 'roo', '~> 2.10'
+gem 'roo', '~> 3.0'
 
 gem 'rails-i18n'
 gem 'icalendar'
