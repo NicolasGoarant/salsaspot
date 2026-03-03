@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_07_090530) do
+ActiveRecord::Schema[7.2].define(version: 2026_03_02_192905) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -74,6 +74,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_07_090530) do
     t.integer "views_count", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "source"
     t.index ["city"], name: "index_events_on_city"
     t.index ["dance_styles"], name: "index_events_on_dance_styles", using: :gin
     t.index ["is_active"], name: "index_events_on_is_active"
